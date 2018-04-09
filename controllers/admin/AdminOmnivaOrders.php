@@ -28,8 +28,8 @@ class AdminOmnivaOrdersController extends ModuleAdminController
 		}
 	public function callcarrier() {
 		$this->_module = new OmnivaltShipping();
-		//$callCarrierReturn = $this->_module->call_omniva();
-		$callCarrierReturn['status'] = true;
+		$callCarrierReturn = $this->_module->call_omniva();
+		//$callCarrierReturn['status'] = true;
 		if($callCarrierReturn['status'] == true)
 			print'got_request';
 		else 
