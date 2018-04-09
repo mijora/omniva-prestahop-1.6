@@ -41,7 +41,7 @@ var omnivaltDelivery = {
         $('.confirm_button_div .confirm_button').unbind().attr('onclick', '').on('click', function(e){
             return self.validate();
         });
-        $('.opc-main-block select[name="omnivalt_parcel_terminal"]').off('change').on('change', function(e) {
+        $('select[name="omnivalt_parcel_terminal"]').off('change').on('change', function(e) {
             var terminal = $(this).val();
             $.ajax({
                 type: 'POST',
