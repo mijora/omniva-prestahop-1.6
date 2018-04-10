@@ -320,8 +320,8 @@ if( $this->labelsMix >= 4) {
             $history = new OrderHistory();
             $history->id_order = (int)$orderId;
             $history->id_employee = (int)$cookie->id_employee;
-            $history->changeIdOrderState((int)Configuration::get('PS_OS_SHIPPING'), $order);
-            $history->addWithEmail(true);
+            //$history->changeIdOrderState((int)Configuration::get('PS_OS_SHIPPING'), $order);
+            //$history->addWithEmail(true);
             
           }
         $pdf->SetFont('freeserif', '', 14);
