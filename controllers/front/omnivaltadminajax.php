@@ -217,7 +217,7 @@ if( $this->labelsMix >= 4) {
     {
       //exit();
       $id_order = intval($id_order);
-      $sql2 = "SELECT omnivalt_manifest FROM "._DB_PREFIX_."cart WHERE id_cart = (SELECT id_cart FROM ps_orders WHERE id_order =".$id_order.")";
+      $sql2 = "SELECT omnivalt_manifest FROM "._DB_PREFIX_."cart WHERE id_cart = (SELECT id_cart FROM "._DB_PREFIX_."orders WHERE id_order =".$id_order.")";
       $isPrinted = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql2);
       if($isPrinted[0]['omnivalt_manifest'] == null) {
         $currentManifest = intval(Configuration::get('omnivalt_manifest'));
