@@ -547,6 +547,9 @@ public function displayForm()
       foreach ($terminals as $terminal){
         if ($terminal['A0_NAME'] != $country && in_array($country,array("LT","EE","LV")))
           continue;
+        if (intval($terminal['TYPE']) == 1) {
+            continue;
+        }
         if (!isset($grouped_options[$terminal['A1_NAME']]))
           $grouped_options[(string)$terminal['A1_NAME']] = array();
         $grouped_options[(string)$terminal['A1_NAME']][(string)$terminal['ZIP']] = $terminal['NAME'];
