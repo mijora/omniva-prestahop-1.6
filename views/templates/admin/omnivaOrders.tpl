@@ -52,7 +52,15 @@
 	{assign var=result value=''}
     {foreach from=$newOrders key=myId item=i}
                         <tr>
-                            <td><input type = "checkbox" class = "selected-orders" value = "{$i.id_order}" /></td>
+                            <td>
+                            <input type = "checkbox" class = "selected-orders" value = "{$i.id_order}" 
+                            {if empty($i.tracking_number)}
+                                typeOrder="new"
+                            {else}
+                                typeOrder="printed"
+                            {/if}
+                            />
+                            </td>
                             <td>{$i.id_order}</td>
                             <td><a href="{$orderLink}&id_order={$i.id_order}">{$i.firstname} {$i.lastname}</td>
                             <td>{$i.tracking_number}</td>
@@ -72,8 +80,8 @@
     {/foreach}
                             </tbody>
                         </table>
-			<a href="{$manifestAll}&order_ids={$result}&type=new" data-url = "{$manifestAll}&type=new&order_ids=" class="btn btn-default btn-xs action-call" target='_blank'>{l s='Manifest' mod='omnivaltshipping'}</a>
-			<a href="{$labels}&order_ids={$result}" data-url = "{$labels}&order_ids=" class="btn btn-default btn-xs action-call" target='_blank'>{l s='Labels' mod='omnivaltshipping'}</a>
+			<a  option="manifest" href="{$manifestAll}&order_ids={$result}&type=new" data-url = "{$manifestAll}&type=new&order_ids=" class="btn btn-default btn-xs action-call" target='_blank'>{l s='Manifest' mod='omnivaltshipping'}</a>
+			<a option="labels" href="{$labels}&order_ids={$result}" data-url = "{$labels}&order_ids=" class="btn btn-default btn-xs action-call" target='_blank'>{l s='Labels' mod='omnivaltshipping'}</a>
 		
 						<br/><hr/><br/>
     {else}
@@ -313,11 +321,17 @@ $(document).ready(function(){
     $('.action-call').on('click',function(e){
         //e.preventDefault();
         var ids = '';
+        var newOrder = false;
         $('.selected-orders:checked').each(function(){
             ids += "," + $(this).val();
+            if(!newOrder)
+                newOrder = ($(this).attr('typeOrder') == 'new');
         });
         if (ids == ""){
             alert('Pasirinkite užsakymus');
+            return false;
+        }  else if (newOrder && $(this).attr("option") == 'manifest') {
+            alert('Pasirinkite užsakymus turinčius siuntos numerį.');
             return false;
         } else {
             $(this).attr('href', $(this).data('url') + ids);
