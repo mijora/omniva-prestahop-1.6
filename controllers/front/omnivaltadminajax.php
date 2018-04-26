@@ -203,9 +203,9 @@ if( $this->labelsMix >= 4) {
   } else if ($this->labelsMix == 1) {
     $pdf->useTemplate($tplidx, 110, 15, 94.5, 108, true);
   } else if ($this->labelsMix == 2) {
-    $pdf->useTemplate($tplidx, 5, 140, 94.5, 108, true);  
+    $pdf->useTemplate($tplidx, 5, 170, 94.5, 108, true);  
   } else if ($this->labelsMix == 3) {
-    $pdf->useTemplate($tplidx, 110, 140, 94.5, 108, true);  
+    $pdf->useTemplate($tplidx, 110, 170, 94.5, 108, true);  
   } else {echo $this->_module->l('Problems with labels count, please, select one order!!!');exit();}
   //$pages++;
   $this->labelsMix++;
