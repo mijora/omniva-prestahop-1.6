@@ -566,6 +566,42 @@ public function displayForm()
     $parcel_terminals = '<option value = "">'.$this->l('Select parcel terminal').'</option>'.$parcel_terminals;
     return $parcel_terminals;
   }
+
+  /**
+   * Generate terminal list with coordinates info
+   */
+  private function getTerminalForMap($selected = '',$country = "LT")
+  {
+    if (!$country){
+      $shop_country = new Country();
+      $country = $shop_country->getIsoById(Configuration::get('PS_SHOP_COUNTRY_ID'));
+    }
+      
+    $terminals_json_file_dir = dirname(__file__)."/locations.json";
+    $terminals_file = fopen($terminals_json_file_dir, "r");
+    $terminals = fread($terminals_file,filesize($terminals_json_file_dir)+10);
+    fclose($terminals_file);
+    $terminals = json_decode($terminals,true);
+    $parcel_terminals = '';
+
+    if (is_array($terminals)){
+      $terminalsList = array();
+      foreach ($terminals as $terminal){
+        if ($terminal['A0_NAME'] != $country && in_array($country,array("LT","EE","LV")) || intval($terminal['TYPE']) == 1)
+          continue;
+
+        if (!isset($grouped_options[$terminal['A1_NAME']]))
+          $grouped_options[(string)$terminal['A1_NAME']] = array();
+        $grouped_options[(string)$terminal['A1_NAME']][(string)$terminal['ZIP']] = $terminal['NAME'];
+      
+        $terminalsList[] = [$terminal['NAME'], $terminal['Y_COORDINATE'], $terminal['X_COORDINATE'], $terminal['ZIP'], $terminal['A1_NAME'], $terminal['A2_NAME'], $terminal['comment_lit']];
+      }
+    }
+    return $terminalsList;
+
+  }
+  
+
   
   public static function getTerminalAddress($code)
   {
@@ -610,10 +646,15 @@ public function displayForm()
     }
     $sql = 'SELECT a.*, c.iso_code FROM '._DB_PREFIX_.'address AS a LEFT JOIN '._DB_PREFIX_.'country AS c ON c.id_country = a.id_country WHERE id_address="'.$params['cart']->id_address_delivery.'"';
     $address = Db::getInstance()->getRow($sql);
+    $this->context->controller->addJS(array( 'http://maps.google.com/maps/api/js?sensor=false', ));
+//    $this->context->controller->addJS(array( 'https://maps.googleapis.com/maps/api/js?key=AIzaSyD9XWrmV9DJfTFZ7smbqlQOYD_KHBLwsFk&callback=initMap', ));
+    $this->context->controller->addJS(array( 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js', ));
+    
     $this->context->smarty->assign(array(
             
             'omnivalt_parcel_terminal_carrier_id' => Configuration::get('omnivalt_pt'),
             'parcel_terminals' => $this->getTerminalsOptions($selected,$address['iso_code']),
+            'terminals_list' => json_encode($this->getTerminalForMap()),
         ));
 
         return $this->display(__file__, 'displayBeforeCarrier.tpl');
