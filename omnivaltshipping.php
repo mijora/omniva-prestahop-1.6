@@ -558,7 +558,7 @@ public function displayForm()
       foreach ($grouped_options as $city=>$locs){
         $parcel_terminals .= '<optgroup label = "'.$city.'">';
         foreach ($locs as $key=>$loc){
-          $parcel_terminals .= '<option value = "'.$key.'" '.($key == $selected?'selected':'').'>'.$loc.'</option>';
+          $parcel_terminals .= '<option value = "'.$key.'" '.($key == $selected?'selected':'').'  class="omnivaOption">'.$loc.'</option>';
         }
         $parcel_terminals .= '</optgroup>';
       }
