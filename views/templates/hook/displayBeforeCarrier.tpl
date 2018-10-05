@@ -20,7 +20,6 @@
 {addJsDef omnivaltdelivery_controller=$link->getModuleLink('omnivaltshipping', 'ajax')}
 <div id="omnivalt_parcel_terminal_carrier_details" style="display: block; margin-top: 10px;">
     <select class="select2" name="omnivalt_parcel_terminal">{$parcel_terminals}</select>
-    
     <script type="text/javascript">
         {literal}
         $(document).ready(function(){
@@ -52,39 +51,6 @@
         var infowindow = new google.maps.InfoWindow();
         var marker, i;
 
-        
-
-        function terminalSelected2(terminal, selection = "Pasirinkite terminala") {
-            let terminalSelection = document.querySelector(".selectedTerminal")
-            terminalSelection.innerHTML = selection
-            
-            console.log('arrow function to select terminal');
-            omnivaSelect = document.getElementsByName("omnivalt_parcel_terminal");
-            /*omnivaOption = document.getElementsByTagName("option");
-            omnivaSelect.value = terminal;
-*/
-            var container = document.querySelector("select[name='omnivalt_parcel_terminal']");
-            console.log(container, container.length)
-            let tSelector = "optgoup > option[value='"+terminal+"']";
-            var matches = document.querySelectorAll(".omnivaOption");
-            matches.forEach(node => {
-                if(node.getAttribute("value") == terminal)
-                    node.selected = 'selected';
-                else
-                    node.selected = false;
-            })
-            
-            $('select[name="omnivalt_parcel_terminal"]').show();
-            $('select[name="omnivalt_parcel_terminal"]').click();
-            omnivaSel = document.getElementsByName("omnivalt_parcel_terminal");
-            console.log(omnivaSelect)
-            /*!omnivaSel.dispatchEvent(new Event('change'));
-            */
-            console.log(matches, matches.length, tSelector);
-            
-        }
-
-        /*const treminalDisplay = (terminal) => {*/
         function terminalDisplay(terminal) {
             terminalSelected(terminal[3], `${terminal[0]} ${terminal[5]}`);
             return (
@@ -122,14 +88,8 @@
 
         function terminalSelected(terminal, selection = "Pasirinkite terminala") {
             
-            let terminalSelection = document.querySelector(".selectedTerminal")
-            terminalSelection.innerHTML = selection
-            
-            console.log('arrow function to select terminal');
             omnivaSelect = document.getElementsByName("omnivalt_parcel_terminal");
-            /*omnivaOption = document.getElementsByTagName("option");
-            omnivaSelect.value = terminal;
-*/
+
             var container = document.querySelector("select[name='omnivalt_parcel_terminal']");
             console.log(container, container.length)
             let tSelector = "optgoup > option[value='"+terminal+"']";
@@ -145,28 +105,9 @@
             $('select[name="omnivalt_parcel_terminal"]').trigger("change");
             $('select[name="omnivalt_parcel_terminal"]').trigger("click").click();
             omnivaSel = document.getElementsByName("omnivalt_parcel_terminal");
-            console.log(omnivaSelect)
-            /*!omnivaSel.dispatchEvent(new Event('change'));
-            */
-            console.log(matches, matches.length, tSelector);
         }
         {/literal}
     </script>
-<!--
-<div id="map-omniva-terminals" style="width: 500px; height: 300px; border: 1px solid black;box-shadow: 3px 3px 1px grey; background-color: lightgray !important;
-"></div>
--->
-
-
-
-<!-- Map modal -->
-
-
-
-
-<button id="myBtn" class="btn btn-basic btn-sm">Terminalai</button>
-
-
-
-
+    <button id="myBtn" class="btn btn-basic btn-sm">Terminalai</button>
 </div>
+

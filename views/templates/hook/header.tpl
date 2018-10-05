@@ -29,11 +29,8 @@
 {addJsDef omnivaltdelivery_controller=$link->getModuleLink('omnivaltshipping', 'ajax')}
 
 
-<!-- Modal content -->
 <style>
 {literal}
-
-/* The Modal (background) */
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
@@ -50,10 +47,8 @@
     animation-duration: 0.4s;
     z-index:99999;
 }
-
-/* Modal Content */
 .modal-content {
-z-index:99999;
+    z-index:99999;
     position:fixed;
     top: 20%;
     left: 15%;
@@ -64,10 +59,9 @@ z-index:99999;
     -webkit-animation-name: slideIn;
     -webkit-animation-duration: 0.4s;
     animation-name: slideIn;
-    animation-duration: 0.4s
+    animation-duration: 0.4s;
 }
 
-/* The Close Button */
 .close {
     color: black;
     float: right;
@@ -87,15 +81,15 @@ z-index:99999;
     padding: 2px 16px;
     /*background-color: #5cb85c;*/
     color: black;
-    height: 20%
+    height: 5%
 
 }
 
+.modal-body {
+    padding: 10px;
+    height:95%;
+    }
 
-.modal-body {padding: 2px 16px;height:70%;}
-
-
-/* Add Animation */
 @-webkit-keyframes slideIn {
     from {bottom: -300px; opacity: 0} 
     to {bottom: 0; opacity: 1}
@@ -122,13 +116,7 @@ z-index:99999;
 {literal}
     var modal = document.getElementById('myModal');
     var btn = document.getElementById("myBtn");
-/*
-    var span = document.getElementsByClassName("close")[0];
 
-    span.onclick = function() {
-        modal.style.display = "none";
-    }
-*/
     window.document.onclick = function(event) {
         if (event.target == modal || event.target.id == 'myModal' || event.target.id == 'terminalsModal') {
             document.getElementById('myModal').style.display = "none";
@@ -140,27 +128,17 @@ z-index:99999;
 </script>
 
 <div id="myModal" class="modal">
-  <!-- Modal content -->
   <div class="modal-content">
     <div class="modal-header">
       <span class="close" id="terminalsModal">&times;</span>
-      <h2>Omniva Terminalai</h2>
+      <h5>Omniva Terminalai</h5>
       <hr/>
     </div>
     <div class="modal-body">
-        <div class="selectedTerminal" style="text-align: center; color: #555;
-            padding: 5px 0 10px;
-            display: inherit;
-            background-color: #fafafa;outline: 0;
-            border: 1px solid black;border-radius:3px; width: 90%; margin:auto; margin-bottom:15px;">
-            Pažymėkite terminala žemelapyje
-        </div>
         <div id="map-omniva-terminals" 
-            style="margin: auto; width: 90%; height: 90%; border: 1px solid black;box-shadow: 3px 3px 1px grey; background-color: lightgray !important;">
+            style="margin: auto; width: 100%; height: 100%; border: 1px solid black; background-color: lightgray !important;">
         </div>
     </div>
   </div>
 </div>
 
-
-<!--/ Map modal -->
