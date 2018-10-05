@@ -40,6 +40,7 @@
         <script type="text/javascript">
         var locations = {$terminals_list};
         {literal}
+        var base_url = window.location.origin;
         window.onload = function(e){
 
             var map = new google.maps.Map(document.getElementById('map-omniva-terminals'), {
@@ -97,7 +98,7 @@
         }
 
         markers = [];
-        const image = 'http://localhost/prestashop/modules/omnivaltshipping/sasi.png';
+        const image = base_url+'/modules/omnivaltshipping/sasi.png';
         for (i = 0; i < locations.length; i++) {  
             marker = new google.maps.Marker({
                 position: new google.maps.LatLng(locations[i][1], locations[i][2]),
@@ -116,7 +117,7 @@
         }
 
           var markerCluster = new MarkerClusterer(map, markers,
-                      {imagePath: 'http://localhost/prestashop/modules/omnivaltshipping/m'});
+                      {imagePath: base_url+'/modules/omnivaltshipping/m'});
         }
 
         function terminalSelected(terminal, selection = "Pasirinkite terminala") {
