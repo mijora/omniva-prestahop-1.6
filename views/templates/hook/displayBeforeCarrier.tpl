@@ -36,16 +36,19 @@
         {/literal}
     </style>
 
-        <script type="text/javascript">
+    <script type="text/javascript">
         var locations = {$terminals_list};
         {literal}
         var base_url = window.location.origin;
-        window.onload = function(e){
+        var map, geocoder, opp = true;
+        const image = base_url+'/modules/omnivaltshipping/sasi.png';
 
-            var map = new google.maps.Map(document.getElementById('map-omniva-terminals'), {
-            zoom: 7,
-            center: new google.maps.LatLng(54.917362, 23.966171),
-            mapTypeId: google.maps.MapTypeId.ROADMAP
+        window.onload = function(e){
+            geocoder = new google.maps.Geocoder();
+            map = new google.maps.Map(document.getElementById('map-omniva-terminals'), {
+                zoom: 7,
+                center: new google.maps.LatLng(54.917362, 23.966171),
+                mapTypeId: google.maps.MapTypeId.ROADMAP
             });
 
         var infowindow = new google.maps.InfoWindow();
@@ -56,7 +59,7 @@
             return (
                 `<div onclick="terminalSelected(${terminal[3]}, '${terminal[0]} ${terminal[5]}')">\
                 <b>${terminal[0]}</b><br /> \
-                ${terminal[4]}<br />\
+                ${terminal[4]} <br />\
                 ${terminal[5]} <br/> \
                 ${terminal[6]} <br/> \
                 </div>`
@@ -64,12 +67,13 @@
         }
 
         markers = [];
-        const image = base_url+'/modules/omnivaltshipping/sasi.png';
         for (i = 0; i < locations.length; i++) {  
             marker = new google.maps.Marker({
                 position: new google.maps.LatLng(locations[i][1], locations[i][2]),
                 map: map,
                 icon: image,
+                ttype: locations[i][0],
+                address: locations[i][5],
             });
 
             markers[i] = marker;
@@ -82,18 +86,16 @@
             })(marker, i));
         }
 
-          var markerCluster = new MarkerClusterer(map, markers,
+        var markerCluster = new MarkerClusterer(map, markers,
                       {imagePath: base_url+'/modules/omnivaltshipping/m'});
         }
 
-        function terminalSelected(terminal, selection = "Pasirinkite terminala") {
-            
+        function terminalSelected(terminal) {
             omnivaSelect = document.getElementsByName("omnivalt_parcel_terminal");
 
             var container = document.querySelector("select[name='omnivalt_parcel_terminal']");
-            console.log(container, container.length)
-            let tSelector = "optgoup > option[value='"+terminal+"']";
             var matches = document.querySelectorAll(".omnivaOption");
+
             matches.forEach(node => {
                 if(node.getAttribute("value") == terminal)
                     node.selected = 'selected';
@@ -103,11 +105,91 @@
             
             $('select[name="omnivalt_parcel_terminal"]').show();
             $('select[name="omnivalt_parcel_terminal"]').trigger("change");
-            $('select[name="omnivalt_parcel_terminal"]').trigger("click").click();
-            omnivaSel = document.getElementsByName("omnivalt_parcel_terminal");
         }
+
+        function codeAddress() {
+            var address = document.getElementById('address').value;
+            geocoder.geocode( { 'address': address}, function(results, status) {
+                if (status == 'OK') {
+                    find_closest_markers(results[0].geometry.location)
+                } else {
+                    console.log('Geocode was not successful for the following reason: ' + status);
+                }
+            });
+        }
+
+
+
+        /** Omniva script coppied **/
+    var $closest_five = [];
+    function find_closest_markers(event) {
+        var R = 6371, distances = [], $lengths = [], $to_sort = [], $l = markers.length, closest = -1;
+
+        for (var i in markers) {
+            // IE needs that
+            if (isNaN(i))
+                continue;
+            var $mark = markers[i];		
+            var rpos1 = $mark.getPosition();
+            var d = google.maps.geometry.spherical.computeDistanceBetween(rpos1, event);
+            distances[i] = d;
+            $lengths[d] = i;
+            $to_sort.push({markerId: i, km: d});
+            if (closest == -1 || d < distances[closest]) {
+                closest = i;
+            }
+        }
+
+        $to_sort.sort(function(a, b) {
+            if (parseFloat(a.km) < parseFloat(b.km)) {
+                return -1;
+            }
+            if (parseFloat(a.km) > parseFloat(b.km)) {
+                return 1;
+            }
+            return 0;
+        });
+
+        if ($to_sort.length > 0) {
+            var count = 4, counter = 0, html = '';
+            $to_sort.forEach(function(terminal){
+                
+                if (counter == 0) {
+                    zoomToMarker(terminal.markerId)
+                    closestMarkerId = terminal.markerId;
+                }
+                if(counter > count) 
+                    return;
+                    counter++;
+
+                terminal.km = (terminal.km/1000).toFixed(2);
+                html += `<li onclick="zoomToMarker(${terminal.markerId})"><a>${markers[terminal.markerId].ttype}</a> ${markers[terminal.markerId].address} <b>${terminal.km} km.</b></li>`
+            });
+
+            document.querySelector('.omniva-modal-body').style.height = '60%';
+            document.querySelector('.omniva-modal-footer').style.height = '34%';
+            document.querySelector('.found_terminals').innerHTML = '<ul style="list-style=none;">'+html+'</ul>';
+            zoomToMarker(closestMarkerId);
+        }
+    }
+
+        function zoomToMarker(closest) {
+            map.setZoom(15);
+            map.panTo(markers[closest].position);
+           // markers[closest].setAnimation(google.maps.Animation.BOUNCE);
+           /*
+            markers.forEach(function(marker,index) {
+                if (index == closest) {
+                    marker.setAnimation(google.maps.Animation.DROP);
+                } else {
+                    marker.setAnimation(null);
+                }
+            })
+            */
+        }
+
+        /***/
         {/literal}
     </script>
-    <button id="myBtn" class="btn btn-basic btn-sm">Terminalai</button>
+    <button id="myBtn" class="btn btn-basic btn-sm">{l s='Terminalai'}</button>
 </div>
-

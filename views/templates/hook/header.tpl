@@ -47,15 +47,15 @@
     animation-duration: 0.4s;
     z-index:99999;
 }
-.modal-content {
+.omniva-modal-content {
     z-index:99999;
     position:fixed;
-    top: 20%;
+    top: 10%;
     left: 15%;
     background-color: #fefefe;
     border-radius: 5px;
     width: 70%;
-    height:70%;
+    height:80%;
     -webkit-animation-name: slideIn;
     -webkit-animation-duration: 0.4s;
     animation-name: slideIn;
@@ -77,19 +77,22 @@
     cursor: pointer;
 }
 
-.modal-header {
-    padding: 2px 16px;
+.omniva-modal-header {
+    padding: 4px 16px;
     /*background-color: #5cb85c;*/
     color: black;
-    height: 5%
-
+    height: 5%;
 }
 
-.modal-body {
+.omniva-modal-body {
     padding: 10px;
-    height:95%;
+    height:88%;
     }
 
+.omniva-modal-footer {
+    height: 6%;
+    align-items: center;
+}
 @-webkit-keyframes slideIn {
     from {bottom: -300px; opacity: 0} 
     to {bottom: 0; opacity: 1}
@@ -109,36 +112,59 @@
     from {opacity: 0} 
     to {opacity: 1}
 }
+
+
+
+.btn-address {
+    background-color: white;
+    color: black;
+    border: 1px solid black; /* Green */
+    border-radius: 2px;
+}
+.btn-address:hover {
+    background-color: #555555;
+    color: white;
+}
 {/literal}
 </style>
 
 <script>
 {literal}
-    var modal = document.getElementById('myModal');
+    var modal = document.getElementById('omnivaLtModal');
     var btn = document.getElementById("myBtn");
 
     window.document.onclick = function(event) {
-        if (event.target == modal || event.target.id == 'myModal' || event.target.id == 'terminalsModal') {
-            document.getElementById('myModal').style.display = "none";
+        if (event.target == modal || event.target.id == 'omnivaLtModal' || event.target.id == 'terminalsModal') {
+            document.getElementById('omnivaLtModal').style.display = "none";
         } else if(event.target.id == 'myBtn') {
-            document.getElementById('myModal').style.display = "block";
+            document.getElementById('omnivaLtModal').style.display = "block";
+             document.querySelector('.omniva-modal-body').style.height = '88%';
+            document.querySelector('.omniva-modal-footer').style.height = '6%';
+            document.querySelector('.found_terminals').innerHTML = '';
+ 
         }
     }
 {/literal}
 </script>
 
-<div id="myModal" class="modal">
-  <div class="modal-content">
-    <div class="modal-header">
+<div id="omnivaLtModal" class="modal">
+  <div class="omniva-modal-content">
+    <div class="omniva-modal-header">
       <span class="close" id="terminalsModal">&times;</span>
-      <h5>Omniva Terminalai</h5>
+      <h5 style="display: inline">{l s='Omniva Terminalai'}</h5>
       <hr/>
     </div>
-    <div class="modal-body">
+    <div class="omniva-modal-body">
         <div id="map-omniva-terminals" 
             style="margin: auto; width: 100%; height: 100%; border: 1px solid black; background-color: lightgray !important;">
         </div>
     </div>
+    <div class="omniva-modal-footer" align="center">
+     <div style="margin: 0 auto;">
+        <input id="address" type="textbox" placeholder="{l s='Surasti artimiausia'}" style="width:30%">
+        <input type="button" class="btn-address" value="{l s='Surasti'}" onclick="codeAddress()">
+      </div>
+      <div class="found_terminals" style="padding: 10px;"></div>
+    </div>
   </div>
 </div>
-
