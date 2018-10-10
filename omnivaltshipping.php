@@ -646,9 +646,11 @@ public function displayForm()
     }
     $sql = 'SELECT a.*, c.iso_code FROM '._DB_PREFIX_.'address AS a LEFT JOIN '._DB_PREFIX_.'country AS c ON c.id_country = a.id_country WHERE id_address="'.$params['cart']->id_address_delivery.'"';
     $address = Db::getInstance()->getRow($sql);
-    $this->context->controller->addJS(array( 'http://maps.google.com/maps/api/js?sensor=false', ));
-//    $this->context->controller->addJS(array( 'https://maps.googleapis.com/maps/api/js?key=AIzaSyD9XWrmV9DJfTFZ7smbqlQOYD_KHBLwsFk&callback=initMap', ));
-    $this->context->controller->addJS(array( 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js', ));
+   // $this->context->controller->addJS(array( 'http://maps.google.com/maps/api/js?sensor=false', ));
+//    $this->context->controller->addJS(array( 'https://maps.googleapis.com/maps/api/js?key=AIzaSyD9XWrmV9DJfTFZ7smbqlQOYD_KHBLwsFkk&callback=initMap', ));
+$this->context->controller->addJS(array('https://maps.googleapis.com/maps/api/js?v=3&sensor=false&libraries=geometry&sensor=false',));
+
+$this->context->controller->addJS(array( 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js', ));
     
     $this->context->smarty->assign(array(
             
