@@ -28,33 +28,34 @@
 {addJsDef omnivalt_parcel_terminal_carrier_id=$omnivalt_parcel_terminal_carrier_id}
 {addJsDef omnivaltdelivery_controller=$link->getModuleLink('omnivaltshipping', 'ajax')}
 
+{if isset($omniva_api_key) and $omniva_api_key != false}
 
 <style>
 {literal}
 .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
+    display: none;
+    position: fixed;
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-    -webkit-animation-name: fadeIn; /* Fade in the background */
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+    -webkit-animation-name: fadeIn;
     -webkit-animation-duration: 0.4s;
     animation-name: fadeIn;
     animation-duration: 0.4s;
-    z-index:99999;
+    z-index:20;
 }
 .omniva-modal-content {
-    z-index:99999;
+    z-index:20;
     position:fixed;
     top: 10%;
     left: 15%;
     background-color: #fefefe;
     border-radius: 5px;
-    width: 70%;
+    width: 75%;
     height:80%;
     -webkit-animation-name: slideIn;
     -webkit-animation-duration: 0.4s;
@@ -79,15 +80,14 @@
 
 .omniva-modal-header {
     padding: 4px 16px;
-    /*background-color: #5cb85c;*/
     color: black;
-    height: 5%;
+    height: 7%;
 }
 
 .omniva-modal-body {
     padding: 10px;
-    height:88%;
-    }
+    height:92%;
+}
 
 .omniva-modal-footer {
     height: 6%;
@@ -113,38 +113,49 @@
     to {opacity: 1}
 }
 
-
-
 .btn-address {
     background-color: white;
     color: black;
-    border: 1px solid black; /* Green */
+    border: 1px solid black;
     border-radius: 2px;
 }
 .btn-address:hover {
     background-color: #555555;
     color: white;
 }
+.btn-address-gps {
+    background-color: red;
+    color: white;
+    text-align: center;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border: 1px solid black;
+    border-radius: 2px;
+}
+.btn-address-gps:hover {
+    background-color: #555555;
+    color: white;
+}
+.pac-container {
+    z-index: 10511 !important;
+}
 {/literal}
 </style>
 
 <script>
-{literal}
-    var modal = document.getElementById('omnivaLtModal');
-    var btn = document.getElementById("myBtn");
-
-    window.document.onclick = function(event) {
-        if (event.target == modal || event.target.id == 'omnivaLtModal' || event.target.id == 'terminalsModal') {
-            document.getElementById('omnivaLtModal').style.display = "none";
-        } else if(event.target.id == 'myBtn') {
-            document.getElementById('omnivaLtModal').style.display = "block";
-             document.querySelector('.omniva-modal-body').style.height = '88%';
-            document.querySelector('.omniva-modal-footer').style.height = '6%';
-            document.querySelector('.found_terminals').innerHTML = '';
- 
+    var omnivaSearch = "{l s='Įveskite adresą paieškos laukelyje, norint surasti paštomatus'}";
+    {literal}
+        var modal = document.getElementById('omnivaLtModal');
+        var btn = document.getElementById("show-omniva-map");
+        window.document.onclick = function(event) {
+            if (event.target == modal || event.target.id == 'omnivaLtModal' || event.target.id == 'terminalsModal') {
+                document.getElementById('omnivaLtModal').style.display = "none";
+            } else if(event.target.id == 'show-omniva-map') {
+                document.getElementById('omnivaLtModal').style.display = "block";
+                document.querySelector('.found_terminals').innerHTML = omnivaSearch;
+            }
         }
-    }
-{/literal}
+    {/literal}
 </script>
 
 <div id="omnivaLtModal" class="modal">
@@ -154,17 +165,17 @@
       <h5 style="display: inline">{l s='Omniva Terminalai'}</h5>
       <hr/>
     </div>
-    <div class="omniva-modal-body">
+    <div class="omniva-modal-body" style="overflow: hidden;">
         <div id="map-omniva-terminals" 
-            style="margin: auto; width: 100%; height: 100%; border: 1px solid black; background-color: lightgray !important;">
+            style=" width: 69%; height: 100%; border: 1px solid black; background-color: lightgray !important; float:left;">
         </div>
-    </div>
-    <div class="omniva-modal-footer" align="center">
-     <div style="margin: 0 auto;">
-        <input id="address" type="textbox" placeholder="{l s='Surasti artimiausia'}" style="width:30%">
-        <input type="button" class="btn-address" value="{l s='Surasti'}" onclick="codeAddress()">
-      </div>
-      <div class="found_terminals" style="padding: 10px;"></div>
+        <div style="width: 30%;padding: 5px; float:left;overflow:hidden;">
+            <input id="address-omniva" type="textbox" class="omniva-search" placeholder="{l s='Surasti pagal adresą'}">
+            <input type="button" class="btn-address" value="{l s='Surasti'}" onclick="codeAddress()">
+            <input class="btn-address-gps" onclick="findNearest()" value="{l s='Surasti artimiausius'}"/>
+            <div class="found_terminals" style="max-height:90%;overflow:hidden;"></div>
+        </div>
     </div>
   </div>
 </div>
+{/if}

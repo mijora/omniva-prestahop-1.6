@@ -35,6 +35,8 @@
             #omnivalt_parcel_terminal_carrier_details{ margin-bottom: 5px }
         {/literal}
     </style>
+{if isset($omniva_api_key) and $omniva_api_key != false}
+
 
     <script type="text/javascript">
         var locations = {$terminals_list};
@@ -45,6 +47,7 @@
 
         window.onload = function(e){
             geocoder = new google.maps.Geocoder();
+
             map = new google.maps.Map(document.getElementById('map-omniva-terminals'), {
                 zoom: 7,
                 center: new google.maps.LatLng(54.917362, 23.966171),
@@ -53,6 +56,32 @@
 
         var infowindow = new google.maps.InfoWindow();
         var marker, i;
+
+        /** Autocomplete **/
+            var input = document.getElementById('address-omniva');
+            var options = {
+                        componentRestrictions: {country: ['lt', 'lv', 'ee']}
+                        };
+            var autocomplete = new google.maps.places.Autocomplete(input, options);
+            //autocomplete.bindTo('bounds', map);
+
+        autocomplete.setFields(
+            ['address_components', 'geometry', 'icon', 'name']);
+
+        autocomplete.addListener('place_changed', function() {
+
+            var place = autocomplete.getPlace();
+            const location = place.geometry.location;
+            input.lat = location.lat();
+            input.lng = location.lng();
+            console.log(location.lat(), location.lng())
+            if (!place.geometry) {
+                console.log("No details available for input: '" + place.name + "'");
+                return;
+            }
+        });
+
+        /** /Autocomplete **/
 
         function terminalDisplay(terminal) {
             terminalSelected(terminal[3], `${terminal[0]} ${terminal[5]}`);
@@ -108,7 +137,7 @@
         }
 
         function codeAddress() {
-            var address = document.getElementById('address').value;
+            var address = document.getElementById('address-omniva').value;
             geocoder.geocode( { 'address': address}, function(results, status) {
                 if (status == 'OK') {
                     find_closest_markers(results[0].geometry.location)
@@ -118,9 +147,6 @@
             });
         }
 
-
-
-        /** Omniva script coppied **/
     var $closest_five = [];
     function find_closest_markers(event) {
         var R = 6371, distances = [], $lengths = [], $to_sort = [], $l = markers.length, closest = -1;
@@ -129,7 +155,7 @@
             // IE needs that
             if (isNaN(i))
                 continue;
-            var $mark = markers[i];		
+            var $mark = markers[i];     
             var rpos1 = $mark.getPosition();
             var d = google.maps.geometry.spherical.computeDistanceBetween(rpos1, event);
             distances[i] = d;
@@ -151,7 +177,7 @@
         });
 
         if ($to_sort.length > 0) {
-            var count = 4, counter = 0, html = '';
+            var count = 6, counter = 0, html = '';
             $to_sort.forEach(function(terminal){
                 
                 if (counter == 0) {
@@ -163,12 +189,10 @@
                     counter++;
 
                 terminal.km = (terminal.km/1000).toFixed(2);
-                html += `<li onclick="zoomToMarker(${terminal.markerId})"><a>${markers[terminal.markerId].ttype}</a> ${markers[terminal.markerId].address} <b>${terminal.km} km.</b></li>`
+                html += `<li onclick="zoomToMarker(${terminal.markerId})"><a><b>${markers[terminal.markerId].ttype}</b></a> ${markers[terminal.markerId].address} <b>${terminal.km} km.</b></li>`
             });
 
-            document.querySelector('.omniva-modal-body').style.height = '60%';
-            document.querySelector('.omniva-modal-footer').style.height = '34%';
-            document.querySelector('.found_terminals').innerHTML = '<ul style="list-style=none;">'+html+'</ul>';
+            document.querySelector('.found_terminals').innerHTML = '<ol start="1" >'+html+'</ol>';
             zoomToMarker(closestMarkerId);
         }
     }
@@ -176,20 +200,16 @@
         function zoomToMarker(closest) {
             map.setZoom(15);
             map.panTo(markers[closest].position);
-           // markers[closest].setAnimation(google.maps.Animation.BOUNCE);
-           /*
-            markers.forEach(function(marker,index) {
-                if (index == closest) {
-                    marker.setAnimation(google.maps.Animation.DROP);
-                } else {
-                    marker.setAnimation(null);
-                }
-            })
-            */
         }
 
-        /***/
+        function findNearest() {
+            navigator.geolocation.getCurrentPosition((loc) => {
+                console.log('The location in lat lon format is: [', loc.coords.latitude, ',', loc.coords.longitude, ']');
+                find_closest_markers(loc.coords)
+            })
+        }
         {/literal}
     </script>
-    <button id="myBtn" class="btn btn-basic btn-sm">{l s='Terminalai'}</button>
+    <button id="show-omniva-map" class="btn btn-basic btn-sm"><i id="show-omniva-map" class="fa fa-map-marker-alt fa-lg" aria-hidden="true"></i></button>
 </div>
+{/if}
