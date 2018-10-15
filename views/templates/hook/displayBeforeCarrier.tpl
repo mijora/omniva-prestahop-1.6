@@ -191,7 +191,7 @@
                     counter++;
 
                 terminal.km = (terminal.km/1000).toFixed(2);
-                html += `<li onclick="zoomToMarker(${terminal.markerId})" style="list-style: decimal;display: list-item;margin-left: 1em;"><a><b>${markers[terminal.markerId].ttype}</b></a> ${markers[terminal.markerId].address} <b>${terminal.km} km.</b></li>`
+                html += `<li onclick="zoomToMarker(${terminal.markerId})" style="list-style: decimal;display: list-item;margin-left: 1em;"><a class="omniva-li"><b>${markers[terminal.markerId].ttype}</b></a> ${markers[terminal.markerId].address} <b>${terminal.km} km.</b></li>`
             });
 
             document.querySelector('.found_terminals').innerHTML = '<ol start="1" >'+html+'</ol>';

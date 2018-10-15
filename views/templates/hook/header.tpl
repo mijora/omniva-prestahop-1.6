@@ -139,6 +139,10 @@
 .pac-container {
     z-index: 10511 !important;
 }
+
+.omniva-li:hover{
+ cursor: pointer;
+}
 {/literal}
 </style>
 
@@ -170,9 +174,9 @@
             style=" width: 69%; height: 100%; border: 1px solid black; background-color: lightgray !important; float:left;">
         </div>
         <div style="width: 30%;padding: 5px; float:left;overflow:hidden;">
-            <input id="address-omniva" type="textbox" class="omniva-search" placeholder="{l s='Surasti pagal adresą'}">
+            <input id="address-omniva" type="textbox" class="omniva-search" style="width:  98%" placeholder="{l s='Surasti pagal adresą'}">
             <input type="button" class="btn-address" value="{l s='Surasti'}" onclick="codeAddress()">
-            <input class="btn-address-gps" onclick="findNearest()" value="{l s='Surasti artimiausius'}"/>
+            <input type="button" class="btn-address-gps" onclick="findNearest()" value="{l s='Surasti artimiausius'}"/>
             <div class="found_terminals" style="max-height:90%;overflow:hidden;"></div>
         </div>
     </div>
