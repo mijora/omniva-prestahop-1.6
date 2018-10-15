@@ -40,6 +40,7 @@
 
     <script type="text/javascript">
         var locations = {$terminals_list};
+        var select_terminal = "{l s='Pasirinkti terminalą'}";
         {literal}
         var base_url = window.location.origin;
         var map, geocoder, opp = true;
@@ -84,13 +85,14 @@
         /** /Autocomplete **/
 
         function terminalDisplay(terminal) {
-            terminalSelected(terminal[3], `${terminal[0]} ${terminal[5]}`);
+            /*terminalSelected(terminal[3], `${terminal[0]} ${terminal[5]}`);*/
             return (
-                `<div onclick="terminalSelected(${terminal[3]}, '${terminal[0]} ${terminal[5]}')">\
+                `<div >\
                 <b>${terminal[0]}</b><br /> \
                 ${terminal[4]} <br />\
                 ${terminal[5]} <br/> \
                 ${terminal[6]} <br/> \
+                <button class="btn-address" style="margin-top: 10px;" onclick="terminalSelected(${terminal[3]}, '${terminal[0]} ${terminal[5]}')">${select_terminal}</button>\
                 </div>`
             );
         }
@@ -189,7 +191,7 @@
                     counter++;
 
                 terminal.km = (terminal.km/1000).toFixed(2);
-                html += `<li onclick="zoomToMarker(${terminal.markerId})"><a><b>${markers[terminal.markerId].ttype}</b></a> ${markers[terminal.markerId].address} <b>${terminal.km} km.</b></li>`
+                html += `<li onclick="zoomToMarker(${terminal.markerId})" style="list-style: decimal;display: list-item;margin-left: 1em;"><a><b>${markers[terminal.markerId].ttype}</b></a> ${markers[terminal.markerId].address} <b>${terminal.km} km.</b></li>`
             });
 
             document.querySelector('.found_terminals').innerHTML = '<ol start="1" >'+html+'</ol>';
