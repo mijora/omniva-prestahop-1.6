@@ -114,23 +114,30 @@
 }
 
 .btn-address {
-    background-color: white;
-    color: black;
+    background-color: #E47A2E;
+    color: white;
+    font-size: 15px;
+    font-weight:500;
     border: 1px solid black;
-    border-radius: 2px;
+    border-radius: 3px;
+    padding: 3px 7px;
+    margin: 2px;
 }
 .btn-address:hover {
     background-color: #555555;
     color: white;
 }
 .btn-address-gps {
-    background-color: red;
+    background-color: #E94B3C;
     color: white;
     text-align: center;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    padding: 3px 7px;
+    margin: 2px;
     border: 1px solid black;
-    border-radius: 2px;
+    border-radius: 3px;
+    color: white;
+    font-size: 15px;
+    font-weight:500;
 }
 .btn-address-gps:hover {
     background-color: #555555;
@@ -142,6 +149,30 @@
 
 .omniva-li:hover{
  cursor: pointer;
+}
+.omniva-terminals-list li {padding: 5px; border-radius: 4px;}
+.omniva-terminals-list li:nth-child(even) {background: #f2f2f2;}
+/*.omniva-terminals-list li:hover { background: #e6e6e6;}*/
+
+.omniva-search {
+        width: 98%;
+    padding: 2px 10px;
+    /* margin: 8px 0; */
+    /*box-sizing: border-box;*/
+    border: 1px solid #555;
+    border-radius: 3px;
+}
+
+.btn-marker {
+    background-color: white;
+    color: black;
+    padding: 4px;
+    border: 1px solid black;
+    border-radius: 2px;
+}
+.btn-marker:hover {
+    background-color: #555555;
+    color: white;
 }
 {/literal}
 </style>
@@ -171,13 +202,15 @@
     </div>
     <div class="omniva-modal-body" style="overflow: hidden;">
         <div id="map-omniva-terminals" 
-            style=" width: 69%; height: 100%; border: 1px solid black; background-color: lightgray !important; float:left;">
+            style=" width: 59%; height: 100%; border: 1px solid black; background-color: lightgray !important; float:left;">
         </div>
-        <div style="width: 30%;padding: 5px; float:left;overflow:hidden;">
-            <input id="address-omniva" type="textbox" class="omniva-search" style="width:  98%" placeholder="{l s='Surasti pagal adresą'}">
-            <input type="button" class="btn-address" value="{l s='Surasti'}" onclick="codeAddress()">
-            <input type="button" class="btn-address-gps" onclick="findNearest()" value="{l s='Surasti artimiausius'}"/>
-            <div class="found_terminals" style="max-height:90%;overflow:hidden;"></div>
+        <div style="width: 40%;padding: 0px 10px; float:left;overflow:hidden;">
+            <input id="address-omniva" type="textbox" class="omniva-search" placeholder="{l s='Surasti pagal adresą'}">
+            <div style="width: 98%; display: flex; justify-content: flex-end">
+                <input type="button" class="btn-address" value="{l s='Surasti'}" onclick="codeAddress()">
+                <input type="button" class="btn-address-gps" onclick="findNearest()" value="{l s='Surasti artimiausius'}"/>
+            </div>
+            <div class="found_terminals" style="margin-top:5px;max-height:90%;overflow:hidden;"></div>
         </div>
     </div>
   </div>

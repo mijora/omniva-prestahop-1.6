@@ -48,7 +48,9 @@
 
         window.onload = function(e){
             geocoder = new google.maps.Geocoder();
-
+            if (window.location.protocol != "https:") {
+            /*    document.querySelector('.btn-address-gps').style.display = "none"; */
+            }
             map = new google.maps.Map(document.getElementById('map-omniva-terminals'), {
                 zoom: 7,
                 center: new google.maps.LatLng(54.917362, 23.966171),
@@ -92,7 +94,7 @@
                 ${terminal[4]} <br />\
                 ${terminal[5]} <br/> \
                 ${terminal[6]} <br/> \
-                <button class="btn-address" style="margin-top: 10px;" onclick="terminalSelected(${terminal[3]}, '${terminal[0]} ${terminal[5]}')">${select_terminal}</button>\
+                <button class="btn-marker" style="margin-top: 10px;" onclick="terminalSelected(${terminal[3]}, '${terminal[0]} ${terminal[5]}')">${select_terminal}</button>\
                 </div>`
             );
         }
@@ -191,10 +193,10 @@
                     counter++;
 
                 terminal.km = (terminal.km/1000).toFixed(2);
-                html += `<li onclick="zoomToMarker(${terminal.markerId})" style="list-style: decimal;display: list-item;margin-left: 1em;"><a class="omniva-li"><b>${markers[terminal.markerId].ttype}</b></a> ${markers[terminal.markerId].address} <b>${terminal.km} km.</b></li>`
+                html += `<li onclick="zoomToMarker(${terminal.markerId})" ><a class="omniva-li"><b>${markers[terminal.markerId].ttype}</b></a> <b>${terminal.km} km.</b></li>`
             });
 
-            document.querySelector('.found_terminals').innerHTML = '<ol start="1" >'+html+'</ol>';
+            document.querySelector('.found_terminals').innerHTML = '<ol class="omniva-terminals-list" start="1" >'+html+'</ol>';
             zoomToMarker(closestMarkerId);
         }
     }
