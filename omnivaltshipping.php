@@ -657,7 +657,7 @@ public function displayForm()
     $apiKey = Configuration::get('omnivalt_api_google');
     $apiKeyValidity = (strlen($apiKey)> 10);
     if ($apiKeyValidity) {
-      $this->context->controller->addJS(array('https://maps.googleapis.com/maps/api/js?v=3&sensor=false&libraries=geometry,places&key=' . $apiKey,));
+      $this->context->controller->addJS(array('https://maps.googleapis.com/maps/api/js?v=3&libraries=geometry,places&key=' . $apiKey,));
       $this->context->controller->addJS(array( 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js', ));
     }
     $this->context->smarty->assign(array(
@@ -697,6 +697,7 @@ public function displayForm()
           $apiKey = Configuration::get('omnivalt_api_google');
           $apiKeyValidity = (strlen($apiKey)> 10);
             $this->context->controller->addJS(array( $this->_path . 'views/js/omnivaltDelivery.js', ));
+            $this->context->controller->addCSS(array( $this->_path.'views/css/omniva.css', ));
             $this->context->controller->addJS(array( 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js', ));
             $this->context->controller->addCSS(array( 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css', ));
             $this->context->controller->addCSS(array( 'https://use.fontawesome.com/releases/v5.3.1/css/all.css', ));
