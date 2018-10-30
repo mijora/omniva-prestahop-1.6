@@ -147,18 +147,20 @@
     z-index: 10511 !important;
 }
 
+.omniva-li {
+    font-size: 15px;
+}
+
 .omniva-li:hover{
  cursor: pointer;
 }
-.omniva-terminals-list li {padding: 5px; border-radius: 4px;}
+.omniva-terminals-list {list-style-type: upper-roman;}
+.omniva-terminals-list li {padding: 5px; border-radius: 4px; list-style-type: upper-roman;}
 .omniva-terminals-list li:nth-child(even) {background: #f2f2f2;}
-/*.omniva-terminals-list li:hover { background: #e6e6e6;}*/
 
 .omniva-search {
-        width: 98%;
+    width: 98%;
     padding: 2px 10px;
-    /* margin: 8px 0; */
-    /*box-sizing: border-box;*/
     border: 1px solid #555;
     border-radius: 3px;
 }
@@ -173,6 +175,151 @@
 .btn-marker:hover {
     background-color: #555555;
     color: white;
+}
+
+.omniva-btn {
+    border: 1px solid black;
+    background: lightgray;
+}
+
+.omniva-btn:hover {
+    color: #fff;
+    background: #555555;
+}
+
+#map-omniva-terminals {
+ width: 59%; height: 100%; border: 1px solid black; background-color: lightgray !important; float:left;
+}
+
+.omniva-search-bar {
+    width: 40%;padding: 0px 10px; float:left;overflow:hidden;
+}
+
+
+/** Tooltips*/
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: black;
+    opacity: 0.9;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 110%;
+    left: 50%;
+    margin-left: -100px;
+}
+
+.tooltip .tooltiptext::afterr {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+/*
+ * Custom scrollbar 
+ **/
+.scrollbar{
+    overflow: auto;
+    display: inline-block;
+    vertical-align: top;
+    height: inherit;
+    max-height:60vh;
+    position:relative;
+    margin-top:5px;
+}
+
+#style-8::-webkit-scrollbar-track
+{
+	/*border: 1px solid black;
+	background-color: #F5F5F5;
+    */
+    background-color: rgba(0,0,0,0.4);
+}
+
+#style-8::-webkit-scrollbar
+{
+	width: 5px;
+    background-color: rgba(0,0,0,0,0.4)
+    /*
+	background-color: #F5F5F5;
+    */
+}
+
+#style-8::-webkit-scrollbar-thumb
+{
+	background-color: #000000;	
+}
+
+/**
+ * Media queries
+ **/
+@media only screen and (max-width: 808px) {
+    #map-omniva-terminals {
+    width: 99%; height: 60%; border: 1px solid black; background-color: lightgray !important;
+    }
+
+    .omniva-search-bar {
+        width: 99%; margin-top: 5px;padding: 0px 10px;overflow:hidden;
+    }
+
+    select[name="omnivalt_parcel_terminal"] {
+        width: 70%;
+    }
+
+    .scrollbar{
+        overflow: auto;
+        display: inline-block;
+        vertical-align: top;
+        height: inherit;
+        max-height:15vh;
+        position:relative;
+        width: 100%;
+        margin-top:5px;
+    }
+}
+ ol li { // notice how I have targeted the li element(s) rather than the whole parent container
+    list-style-type: decimal; // also, there is no need for !important 
+    list-style-type: upper-roman;
+}
+@media screen and (min-width: 1500px) {
+
+    .omniva-modal-content {
+        z-index:20;
+        position:fixed;
+        top: 10%;
+        left: 15%;
+        background-color: #fefefe;
+        border-radius: 5px;
+        width: 65%;
+        height:60%;
+        -webkit-animation-name: slideIn;
+        -webkit-animation-duration: 0.4s;
+        animation-name: slideIn;
+        animation-duration: 0.4s;
+    }
+
+    .scrollbar{
+        max-height:40vh;
+    }
 }
 {/literal}
 </style>
@@ -200,17 +347,16 @@
       <h5 style="display: inline">{l s='Omniva Terminalai'}</h5>
       <hr/>
     </div>
-    <div class="omniva-modal-body" style="overflow: hidden;">
-        <div id="map-omniva-terminals" 
-            style=" width: 59%; height: 100%; border: 1px solid black; background-color: lightgray !important; float:left;">
+    <div class="omniva-modal-body" style="/*overflow: hidden;*/">
+        <div id="map-omniva-terminals">
         </div>
-        <div style="width: 40%;padding: 0px 10px; float:left;overflow:hidden;">
+        <div class="omniva-search-bar">
             <input id="address-omniva" type="textbox" class="omniva-search" placeholder="{l s='Surasti pagal adresą'}">
             <div style="width: 98%; display: flex; justify-content: flex-end">
                 <input type="button" class="btn-address" value="{l s='Surasti'}" onclick="codeAddress()">
                 <input type="button" class="btn-address-gps" onclick="findNearest()" value="{l s='Surasti artimiausius'}"/>
             </div>
-            <div class="found_terminals" style="margin-top:5px;max-height:90%;overflow:hidden;"></div>
+            <div class="found_terminals scrollbar" style="/*margin-top:5px;max-height:90%;overflow:hidden;*/" id="style-8"></div>
         </div>
     </div>
   </div>

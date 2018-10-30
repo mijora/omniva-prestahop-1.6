@@ -19,7 +19,7 @@
 *}
 {addJsDef omnivaltdelivery_controller=$link->getModuleLink('omnivaltshipping', 'ajax')}
 <div id="omnivalt_parcel_terminal_carrier_details" style="display: block; margin-top: 10px;">
-    <select class="select2" name="omnivalt_parcel_terminal">{$parcel_terminals}</select>
+    <select class="select2" name="omnivalt_parcel_terminal" >{$parcel_terminals}</select>
     <script type="text/javascript">
         {literal}
         $(document).ready(function(){
@@ -43,7 +43,7 @@
         var select_terminal = "{l s='Pasirinkti terminalą'}";
         {literal}
         var base_url = window.location.origin;
-        var map, geocoder, opp = true;
+        var map, geocoder, markerAddress, opp = true;
         const image = base_url+'/modules/omnivaltshipping/sasi.png';
 
         window.onload = function(e){
@@ -70,6 +70,12 @@
 
         autocomplete.setFields(
             ['address_components', 'geometry', 'icon', 'name']);
+        
+        markerAddress = new google.maps.Marker({
+            map: map,
+            anchorPoint: new google.maps.Point(0, -29),
+            //position: new google.maps.LatLng(22, 55)
+        });
 
         autocomplete.addListener('place_changed', function() {
 
@@ -87,7 +93,6 @@
         /** /Autocomplete **/
 
         function terminalDisplay(terminal) {
-            /*terminalSelected(terminal[3], `${terminal[0]} ${terminal[5]}`);*/
             return (
                 `<div >\
                 <b>${terminal[0]}</b><br /> \
@@ -138,13 +143,20 @@
             
             $('select[name="omnivalt_parcel_terminal"]').show();
             $('select[name="omnivalt_parcel_terminal"]').trigger("change");
+            document.getElementById('omnivaLtModal').style.display = "none";
         }
 
         function codeAddress() {
             var address = document.getElementById('address-omniva').value;
             geocoder.geocode( { 'address': address}, function(results, status) {
                 if (status == 'OK') {
+                    markerAddress.setVisible(false);
+                    markerAddress.setPosition(results[0].geometry.location);
+                    markerAddress.setTitle(results[0].formatted_address)
+                    markerAddress.setVisible(true);
                     find_closest_markers(results[0].geometry.location)
+                    map.panTo(results[0].geometry.location)
+                    map.setZoom(13)
                 } else {
                     console.log('Geocode was not successful for the following reason: ' + status);
                 }
@@ -181,7 +193,7 @@
         });
 
         if ($to_sort.length > 0) {
-            var count = 6, counter = 0, html = '';
+            var count = 20, counter = 0, html = '';
             $to_sort.forEach(function(terminal){
                 
                 if (counter == 0) {
@@ -193,11 +205,11 @@
                     counter++;
 
                 terminal.km = (terminal.km/1000).toFixed(2);
-                html += `<li onclick="zoomToMarker(${terminal.markerId})" ><a class="omniva-li"><b>${markers[terminal.markerId].ttype}</b></a> <b>${terminal.km} km.</b></li>`
+                html += `<li onclick="zoomToMarker(${terminal.markerId})" ><div style="widthh:60%;"><a class="omniva-li">${counter}. <b>${markers[terminal.markerId].ttype}</b></a> <b>${terminal.km} km.</b></div></li>`
             });
 
-            document.querySelector('.found_terminals').innerHTML = '<ol class="omniva-terminals-list" start="1" >'+html+'</ol>';
-            zoomToMarker(closestMarkerId);
+            document.querySelector('.found_terminals').innerHTML = '<ol class="omniva-terminals-list" start="1">'+html+'</ol>';
+            //zoomToMarker(closestMarkerId);
         }
     }
 
@@ -214,6 +226,6 @@
         }
         {/literal}
     </script>
-    <button id="show-omniva-map" class="btn btn-basic btn-sm"><i id="show-omniva-map" class="fa fa-map-marker-alt fa-lg" aria-hidden="true"></i></button>
+    <button id="show-omniva-map" class="btn btn-basic btn-sm omniva-btn tooltip"><span class="tooltiptext">{l s='Teminalų paieška žemelapyje'}</span><i id="show-omniva-map" class="fa fa-map-marker-alt fa-lg" aria-hidden="true"></i></button>
 </div>
 {/if}
