@@ -242,9 +242,10 @@
 /**
  * Media queries
  **/
+
 @media only screen and (max-width: 808px) {
     #map-omniva-terminals {
-    width: 99%; height: 50%; border: 1px solid black; background-color: lightgray !important;
+    width: 99%; height: 30%; border: 1px solid black; background-color: lightgray !important;
     }
 
     .omniva-search-bar {

@@ -83,7 +83,6 @@
             const location = place.geometry.location;
             input.lat = location.lat();
             input.lng = location.lng();
-            console.log(location.lat(), location.lng())
             if (!place.geometry) {
                 console.log("No details available for input: '" + place.name + "'");
                 return;
@@ -112,6 +111,7 @@
                 icon: image,
                 ttype: locations[i][0],
                 address: locations[i][5],
+                terminal_id: locations[i][3],
             });
 
             markers[i] = marker;
@@ -171,7 +171,7 @@
             // IE needs that
             if (isNaN(i))
                 continue;
-            var $mark = markers[i];     
+            var $mark = markers[i];		
             var rpos1 = $mark.getPosition();
             var d = google.maps.geometry.spherical.computeDistanceBetween(rpos1, event);
             distances[i] = d;
@@ -193,7 +193,7 @@
         });
 
         if ($to_sort.length > 0) {
-            var count = 20, counter = 0, html = '';
+            var count = 15, counter = 0, html = '';
             $to_sort.forEach(function(terminal){
                 
                 if (counter == 0) {
@@ -203,24 +203,40 @@
                 if(counter > count) 
                     return;
                     counter++;
-
                 terminal.km = (terminal.km/1000).toFixed(2);
-                html += `<li onclick="zoomToMarker(${terminal.markerId})" ><div style="widthh:60%;"><a class="omniva-li">${counter}. <b>${markers[terminal.markerId].ttype}</b></a> <b>${terminal.km} km.</b></div></li>`
+                html += `<li onclick="zoomToMarker(${terminal.markerId})" ><div style="widthh:60%;"><a class="omniva-li">${counter}. <b>${markers[terminal.markerId].ttype}</b></a> <b>${terminal.km} km.</b>\
+                            <div align="left" id="omn-${terminal.markerId}" class="omniva-details" style="display:none;">${markers[terminal.markerId].ttype} <br/>\
+                            ${markers[terminal.markerId].address} <br/>\
+                            <button class="btn-marker" style="font-size:14px; padding:0px 5px;margin-bottom:10px; margin-top:5px;height:25px;" onclick="terminalSelected(${markers[terminal.markerId].terminal_id})"> ${select_terminal} </button>\
+                            </div>
+                            </div></li>`
             });
 
             document.querySelector('.found_terminals').innerHTML = '<ol class="omniva-terminals-list" start="1">'+html+'</ol>';
             //zoomToMarker(closestMarkerId);
         }
     }
-
         function zoomToMarker(closest) {
             map.setZoom(15);
             map.panTo(markers[closest].position);
+            terminalDetails(closest);
+        }
+
+        function terminalDetails(id) {
+            
+            Array.from(document.querySelectorAll(".omniva-details"))
+                .forEach(function(val) {
+                    val.style.display = 'none';
+            });
+
+            id = 'omn-'+id;
+            dispOmniva = document.getElementById(id)
+            if(dispOmniva)
+            dispOmniva.style.display = 'block';
         }
 
         function findNearest() {
             navigator.geolocation.getCurrentPosition((loc) => {
-                console.log('The location in lat lon format is: [', loc.coords.latitude, ',', loc.coords.longitude, ']');
                 find_closest_markers(loc.coords)
             })
         }
