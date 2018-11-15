@@ -45,7 +45,7 @@
         var base_url = window.location.origin;
         var map, geocoder, markerAddress, opp = true;
         const image = base_url+'/modules/omnivaltshipping/sasi.png';
-
+//const image = base_url+'/prestashop/modules/omnivaltshipping/sasi.png';
         window.onload = function(e){
             geocoder = new google.maps.Geocoder();
             if (window.location.protocol != "https:") {
@@ -126,7 +126,7 @@
 
         var markerCluster = new MarkerClusterer(map, markers,
                       {imagePath: base_url+'/modules/omnivaltshipping/m'});
-        }
+        }/*End of onload*/
 
         function terminalSelected(terminal) {
             omnivaSelect = document.getElementsByName("omnivalt_parcel_terminal");
@@ -164,7 +164,7 @@
         }
 
     var $closest_five = [];
-    function find_closest_markers(event) {
+    function find_closest_markers(event) {console.log(event)
         var R = 6371, distances = [], $lengths = [], $to_sort = [], $l = markers.length, closest = -1;
 
         for (var i in markers) {
@@ -236,8 +236,17 @@
         }
 
         function findNearest() {
+
             navigator.geolocation.getCurrentPosition((loc) => {
-                find_closest_markers(loc.coords)
+                console.log(loc.coords.latitude, loc.coords.longitude);
+                myPlace = new google.maps.LatLng(loc.coords.latitude, loc.coords.longitude);
+                find_closest_markers(myPlace)
+
+                markerAddress.setVisible(false);
+                markerAddress.setPosition(myPlace);
+                markerAddress.setVisible(true);
+                map.panTo(myPlace)
+                map.setZoom(13)
             })
         }
         {/literal}
