@@ -19,7 +19,7 @@
 *}
 {addJsDef omnivaltdelivery_controller=$link->getModuleLink('omnivaltshipping', 'ajax')}
 <div id="omnivalt_parcel_terminal_carrier_details" style="display: block; margin-top: 10px;">
-    <select class="select2" name="omnivalt_parcel_terminal" >{$parcel_terminals}</select>
+    <select class="select2" name="omnivalt_parcel_terminal" style="max-width:300px;">{$parcel_terminals}</select>
     <script type="text/javascript">
         {literal}
         $(document).ready(function(){
@@ -45,7 +45,7 @@
         var base_url = window.location.origin;
         var map, geocoder, markerAddress, opp = true;
         const image = base_url+'/modules/omnivaltshipping/sasi.png';
-//const image = base_url+'/prestashop/modules/omnivaltshipping/sasi.png';
+
         window.onload = function(e){
             geocoder = new google.maps.Geocoder();
             if (window.location.protocol != "https:") {
@@ -126,7 +126,7 @@
 
         var markerCluster = new MarkerClusterer(map, markers,
                       {imagePath: base_url+'/modules/omnivaltshipping/m'});
-        }/*End of onload*/
+        }
 
         function terminalSelected(terminal) {
             omnivaSelect = document.getElementsByName("omnivalt_parcel_terminal");
@@ -164,14 +164,14 @@
         }
 
     var $closest_five = [];
-    function find_closest_markers(event) {console.log(event)
+    function find_closest_markers(event) {
         var R = 6371, distances = [], $lengths = [], $to_sort = [], $l = markers.length, closest = -1;
 
         for (var i in markers) {
             // IE needs that
             if (isNaN(i))
                 continue;
-            var $mark = markers[i];		
+            var $mark = markers[i];     
             var rpos1 = $mark.getPosition();
             var d = google.maps.geometry.spherical.computeDistanceBetween(rpos1, event);
             distances[i] = d;
@@ -236,17 +236,8 @@
         }
 
         function findNearest() {
-
             navigator.geolocation.getCurrentPosition((loc) => {
-                console.log(loc.coords.latitude, loc.coords.longitude);
-                myPlace = new google.maps.LatLng(loc.coords.latitude, loc.coords.longitude);
-                find_closest_markers(myPlace)
-
-                markerAddress.setVisible(false);
-                markerAddress.setPosition(myPlace);
-                markerAddress.setVisible(true);
-                map.panTo(myPlace)
-                map.setZoom(13)
+                find_closest_markers(loc.coords)
             })
         }
         {/literal}

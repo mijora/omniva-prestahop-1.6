@@ -560,7 +560,8 @@ public function displayForm()
         }
         if (!isset($grouped_options[$terminal['A1_NAME']]))
           $grouped_options[(string)$terminal['A1_NAME']] = array();
-        $grouped_options[(string)$terminal['A1_NAME']][(string)$terminal['ZIP']] = $terminal['NAME'];
+        //$grouped_options[(string)$terminal['A1_NAME']][(string)$terminal['ZIP']] = $terminal['NAME'];
+        $grouped_options[(string)$terminal['A1_NAME']][(string)$terminal['ZIP']] = $terminal['NAME']. ' ('.$terminal['A2_NAME'].')';
       }
       ksort($grouped_options);
       foreach ($grouped_options as $city=>$locs){
