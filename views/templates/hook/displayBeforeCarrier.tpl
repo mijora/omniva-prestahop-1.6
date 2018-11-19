@@ -90,8 +90,8 @@
         });
 
         /** /Autocomplete **/
-
-        function terminalDisplay(terminal) {
+/*
+        function terminalDisplay00(terminal) {
             return (
                 `<div >\
                 <b>${terminal[0]}</b><br /> \
@@ -100,6 +100,23 @@
                 ${terminal[6]} <br/> \
                 <button class="btn-marker" style="margin-top: 10px;" onclick="terminalSelected(${terminal[3]}, '${terminal[0]} ${terminal[5]}')">${select_terminal}</button>\
                 </div>`
+            );
+        }
+*/
+        /** set to enable some  older IE browsers */
+        function terminalDisplay(terminal) {
+            joins = terminal[0]+ ' ' + terminal[5];
+            selectTerm = '<button class="btn-marker" style="margin-top: 10px;" onclick="terminalSelected('+terminal[3], joins+')">'+select_terminal+'</button>';
+            selectFunktion = "terminalSelected("+terminal[3]+", '"+joins+"')";
+            selectTerm = '<button class="btn-marker" style="margin-top: 10px;"onclick="'+selectFunktion+'">'+select_terminal+'</button>';
+ 
+            return (
+                '<div><b>'+terminal[0]+'</b><br>\
+                '+terminal[4]+'<br>\
+                '+terminal[5]+'<br>\
+                '+terminal[6]+'<br>\
+                '+selectTerm+'<br>\
+                </div>'
             );
         }
 
@@ -204,12 +221,21 @@
                     return;
                     counter++;
                 terminal.km = (terminal.km/1000).toFixed(2);
-                html += `<li onclick="zoomToMarker(${terminal.markerId})" ><div style="widthh:60%;"><a class="omniva-li">${counter}. <b>${markers[terminal.markerId].ttype}</b></a> <b>${terminal.km} km.</b>\
+                /*
+                html2 += `<li onclick="zoomToMarker(${terminal.markerId})" ><div style="widthh:60%;"><a class="omniva-li">${counter}. <b>${markers[terminal.markerId].ttype}</b></a> <b>${terminal.km} km.</b>\
                             <div align="left" id="omn-${terminal.markerId}" class="omniva-details" style="display:none;">${markers[terminal.markerId].ttype} <br/>\
                             ${markers[terminal.markerId].address} <br/>\
                             <button class="btn-marker" style="font-size:14px; padding:0px 5px;margin-bottom:10px; margin-top:5px;height:25px;" onclick="terminalSelected(${markers[terminal.markerId].terminal_id})"> ${select_terminal} </button>\
                             </div>
-                            </div></li>`
+                            </div></li>`;
+                            */
+                /** Downgrade to IE */
+                html += '<li onclick="zoomToMarker('+terminal.markerId+')" ><div style="widthh:60%;"><a class="omniva-li">'+counter+'. <b>'+markers[terminal.markerId].ttype+'</b></a> <b>'+terminal.km+' km.</b>\
+                            <div align="left" id="omn-'+terminal.markerId+'" class="omniva-details" style="display:none;">'+markers[terminal.markerId].ttype+' <br/>\
+                            '+markers[terminal.markerId].address+' <br/>\
+                            <button class="btn-marker" style="font-size:14px; padding:0px 5px;margin-bottom:10px; margin-top:5px;height:25px;" onclick="terminalSelected('+markers[terminal.markerId].terminal_id+')"> '+select_terminal+' </button>\
+                            </div>\
+                            </div></li>';
             });
 
             document.querySelector('.found_terminals').innerHTML = '<ol class="omniva-terminals-list" start="1">'+html+'</ol>';
