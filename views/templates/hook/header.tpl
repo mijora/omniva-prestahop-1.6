@@ -58,7 +58,7 @@
         </div>
         <div class="omniva-search-bar" >
             <h3 style="margin-top: 0px;">{l s='Paštomatų adresai'}</h3>
-            <input id="address-omniva" type="textbox" class="omniva-search" height="48" placeholder="{l s='Surasti pagal adresą'}">
+            <input id="address-omniva" type="textbox" class="omniva-search"  height="48" placeholder="{l s='Surasti pagal adresą'}">
             <div style="width: 98%; display: flex; justify-content: flex-end">
                 <input type="button" class="btn-address" value="{l s='Surasti'}" onclick="codeAddress()">
                 <input type="button" class="btn-address-gps" onclick="findNearest()" value="{l s='Arčiausiai manęs'}"/>
