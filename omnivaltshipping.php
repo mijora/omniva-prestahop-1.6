@@ -657,10 +657,13 @@ public function displayForm()
     $address = Db::getInstance()->getRow($sql);
     $apiKey = Configuration::get('omnivalt_api_google');
     $apiKeyValidity = (strlen($apiKey)> 10);
-    if ($apiKeyValidity) {
+    if ($apiKeyValidity && false) {
       $this->context->controller->addJS(array('https://maps.googleapis.com/maps/api/js?v=3&libraries=geometry,places&key=' . $apiKey,));
       $this->context->controller->addJS(array( 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js', ));
     }
+
+    
+
     $this->context->smarty->assign(array(
             'omniva_api_key' => $apiKeyValidity,
             'omnivalt_parcel_terminal_carrier_id' => Configuration::get('omnivalt_pt'),
@@ -702,6 +705,12 @@ public function displayForm()
             $this->context->controller->addJS(array( 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js', ));
             $this->context->controller->addCSS(array( 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css', ));
             $this->context->controller->addCSS(array( 'https://use.fontawesome.com/releases/v5.3.1/css/all.css', ));
+            $this->context->controller->addJS(array( 'https://js.arcgis.com/4.9/', ));
+            $this->context->controller->addCSS(array('https://js.arcgis.com/4.9/esri/css/main.css', ));
+            //$this->context->controller->addJS(array( $this->_path . 'views/js/esriMap.js', ));
+            //$locations = json_encode($this->getTerminalForMap());
+            //Media::addJsDef(array('omnivaltshipping' => array('locations' => $locations)));
+
 
             $this->smarty->assign(array(
               'omniva_api_key' => $apiKeyValidity,

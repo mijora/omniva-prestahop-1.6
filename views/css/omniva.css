@@ -157,10 +157,12 @@
 
 #map-omniva-terminals {
  width: 59%; height: 100%; border: 1px solid black; background-color: lightgray !important; float:left;
+ 
 }
 
 .omniva-search-bar {
     width: 40%;
+    min-height: 200px;
     padding: 0px 10px; 
     float:left;
     overflow:hidden;
