@@ -106,7 +106,7 @@ require([
 
   var markerSymbol = {
     type: "picture-marker",
-    url: "/prestashop/modules/omnivaltshipping/sasi.png",
+    url: "/modules/omnivaltshipping/sasi.png",
     width: "24px",
    height: "30px"
   };
