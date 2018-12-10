@@ -41,9 +41,22 @@
         var locations = {$terminals_list};
         var select_terminal = "{l s='Pasirinkti terminalą'}";
         {literal}
+
+        function popTemplate(id, name, city, address, comment) {
+            return {
+            title: name,
+            content: "<b>"+city+"</b><br> " +
+                        "<b>"+address+"</b><br> " +
+                        comment+"<br>  " +
+                        "<Button onclick='terminalSelected("+id+");' class='omniva-btn'>"+select_terminal+"</Button>",
+            }
+        }
+
+        var text_search_placeholder = "įveskite adresą";
         var base_url = window.location.origin;
         var map, geocoder, markerAddress, opp = true;
         const image = base_url+'/modules/omnivaltshipping/sasi.png';
+        const locator_img = base_url+'/modules/omnivaltshipping/locator_img.png';
         var view, goToLayer, zoomTo, findNearest;
 
     function toRad(Value) 
@@ -82,6 +95,26 @@
             document.getElementById('omnivaLtModal').style.display = "none";
         }
 
+        function selectToMap(terminal_id) {
+            console.log(terminal_id);
+            view.when(function(){
+                view.graphics.forEach(function(graphic){ 
+                    let omniva = Object.assign({}, graphic.omniva);
+                    if(graphic.omniva.id == terminal_id) {
+                        view.goTo(graphic);
+                        //view.center = graphic;
+                        //view.zoom = 13
+                        var popup = view.popup;
+                        popup.title =  omniva.name,
+                        popup.content = "<b>"+omniva.city+"</b><br><b>"+omniva.address+"</b><br><br>"+omniva.comment+"<br>"+
+                        "<Button onclick='terminalSelected("+omniva.id+");' class='omniva-btn'>"+select_terminal+"</Button>",                    
+                        popup.location = graphic.geometry;      
+                        popup.open();    
+                    }
+                }); 
+            });
+        }
+
 window.onload = function() {
 require([
   "esri/Map",
@@ -111,33 +144,6 @@ require([
    height: "30px"
   };
 
-    goToLayer = function(zoomLayer) {
-        if(view && view.graphics){
-            view.goTo([23,55]);
-        }  
-    }
-
-
-  var measureThisAction = {
-    title: "Measure Length",
-    id: "measure-this",
-    image: "Measure_Distance16.png",
-    className: 'select-terminal-btn',
-    content: "kuku"
-  };
-
-
-function popTemplate(id, name, city, address, comment) {
-    return {
-      title: name,
-      content: "<b>"+city+"</b><br> " +
-                "<b>"+address+"</b><br> " +
-                comment+"<br>  " +
-                "<Button onclick='terminalSelected("+id+");'>"+select_terminal+"</Button>",
-      /*actions: [measureThisAction]*/
-    }
-}
-
         for (i = 0; i < locations.length; i++) {  
             let graphic = new Graphic({
                 geometry: {
@@ -149,7 +155,8 @@ function popTemplate(id, name, city, address, comment) {
                 name: locations[i][0],
                 city: locations[i][4],
                 address: locations[i][5],
-                id: locations[i][3]
+                id: locations[i][3],
+                comment: locations[i][6]
             },
             symbol: markerSymbol,
                 popupTemplate: popTemplate(locations[i][3], locations[i][0], locations[i][4], locations[i][5], locations[i][6])
@@ -157,23 +164,53 @@ function popTemplate(id, name, city, address, comment) {
             view.graphics.add(graphic);
         }
 
+        /* Search widget*/
         searchLoc = new Locator({ url: "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer" }),
         searchLoc.countryCode = "Lt"
         var searchWidget = new Search({
             view: view,
+            position: "top-left",
+            popupEnabled: false,
+            minSuggestCharacters:3,
+            includeDefaultSources:false,
             container: "omniva-search",
-            placeholder: 'Paieška',
-            position: "top-left"
         });
 
+        sources = [
+            {
+                locator: searchLoc,
+                countryCode: "Lt",
+                placeholder: text_search_placeholder,
+                resultSymbol: {
+                    type: "picture-marker",
+                    url: locator_img,
+                    size: 24,
+                    width: 24,
+                    height: 24,
+                    xoffset: 0,
+                    yoffset: 0
+                }
+            }
+        ]
+        searchWidget.sources = sources;
+
         zoomTo = function(graphic, id) {
-            view.center = graphic;
-            view.zoom = 13
             terminalDetails(id);
+            view.graphics.forEach(function(graphic){ 
+                let omniva = Object.assign({}, graphic.omniva);
+                if(graphic.omniva.id == id) {
+                    view.goTo(graphic)
+                    var popup = view.popup;
+                    popup.title =  omniva.name,
+                    popup.content = "<b>"+omniva.city+"</b><br><b>"+omniva.address+"</b><br>"+omniva.comment+"<br>"+
+                    "<Button onclick='terminalSelected("+omniva.id+");' class='omniva-btn'>"+select_terminal+"</Button>",                    
+                    popup.location = graphic.geometry;      
+                    popup.open();    
+                }
+            });  
         }
 
         function terminalDetails(id) {
-            
             Array.from(document.querySelectorAll(".omniva-details"))
                 .forEach(function(val) {
                     val.style.display = 'none';
@@ -181,7 +218,7 @@ function popTemplate(id, name, city, address, comment) {
             id = 'omn-'+id;
             dispOmniva = document.getElementById(id)
             if(dispOmniva)
-            dispOmniva.style.display = 'block';
+                dispOmniva.style.display = 'block';
         }
 
        findNearest = function() {
@@ -216,6 +253,7 @@ function popTemplate(id, name, city, address, comment) {
             
             filteredGRAF.forEach(function(terminal){
                 let omniva = Object.assign({}, terminal.omniva);
+                let termGraphic = Object.assign({}, terminal)
                 let destination = [terminal.geometry.longitude, terminal.geometry.latitude]
                 let goTo = {
                         target: destination,

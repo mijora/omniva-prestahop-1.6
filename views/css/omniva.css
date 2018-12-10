@@ -296,3 +296,10 @@
         max-height:40vh;
     }
 }
+
+.esri-search__input {
+    padding: 2px 10px;
+    border: 1px solid #555;
+    border-radius: 3px;
+    line-height: 28px;
+}

@@ -700,13 +700,14 @@ public function displayForm()
         if (in_array(Context::getContext()->controller->php_self, array('order-opc', 'order'))) {
           $apiKey = Configuration::get('omnivalt_api_google');
           $apiKeyValidity = (strlen($apiKey)> 10);
-            $this->context->controller->addJS(array( $this->_path . 'views/js/omnivaltDelivery.js', ));
-            $this->context->controller->addCSS(array( $this->_path.'views/css/omniva.css', ));
             $this->context->controller->addJS(array( 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js', ));
             $this->context->controller->addCSS(array( 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css', ));
             $this->context->controller->addCSS(array( 'https://use.fontawesome.com/releases/v5.3.1/css/all.css', ));
             $this->context->controller->addJS(array( 'https://js.arcgis.com/4.9/', ));
-            $this->context->controller->addCSS(array('https://js.arcgis.com/4.9/esri/css/main.css', ));
+            //$this->context->controller->addCSS(array('https://js.arcgis.com/4.9/esri/css/main.css', ));
+            $this->context->controller-> addCSS(array('https://js.arcgis.com/4.9/esri/themes/light/main.css'));
+            $this->context->controller->addJS(array( $this->_path . 'views/js/omnivaltDelivery.js', ));
+            $this->context->controller->addCSS(array( $this->_path.'views/css/omniva.css', ));
             //$this->context->controller->addJS(array( $this->_path . 'views/js/esriMap.js', ));
             //$locations = json_encode($this->getTerminalForMap());
             //Media::addJsDef(array('omnivaltshipping' => array('locations' => $locations)));
