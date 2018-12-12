@@ -101,9 +101,8 @@
                 view.graphics.forEach(function(graphic){ 
                     let omniva = Object.assign({}, graphic.omniva);
                     if(graphic.omniva.id == terminal_id) {
+                        view.zoom = 13
                         view.goTo(graphic);
-                        //view.center = graphic;
-                        //view.zoom = 13
                         var popup = view.popup;
                         popup.title =  omniva.name,
                         popup.content = "<b>"+omniva.city+"</b><br><b>"+omniva.address+"</b><br><br>"+omniva.comment+"<br>"+
@@ -131,10 +130,10 @@ require([
   });
 
    view = new MapView({
-    center: [23, 55.4],
+    center: [23.96472, 54.999921],
     container: "map-omniva-terminals",
     map: map,
-    zoom: 5
+    zoom: 6
   });
 
   var markerSymbol = {
@@ -199,6 +198,7 @@ require([
             view.graphics.forEach(function(graphic){ 
                 let omniva = Object.assign({}, graphic.omniva);
                 if(graphic.omniva.id == id) {
+                    view.zoom = 15
                     view.goTo(graphic)
                     var popup = view.popup;
                     popup.title =  omniva.name,
@@ -228,7 +228,8 @@ require([
         }
 
         function findClosest(lat, lng) {
-
+            view.zoom = 12
+            view.center = [lng, lat];
             filteredGRAF = view.graphics.map(function(graphic){
                     let {latitude, longitude} = graphic.geometry
                     let distance = calcCrow(lat, lng, latitude, longitude)
