@@ -115,6 +115,16 @@
         }
 
 window.onload = function() {
+        let element = document.getElementById('omniva-search');
+        element.addEventListener('keypress', function(evt){
+          let isEnter = evt.keyCode == 13;
+          if(isEnter) {
+              evt.preventDefault();
+              selection = document.querySelector(".esri-search__suggestions-list > li");
+              if(selection)
+                selection.click();
+          }
+        });
 require([
   "esri/Map",
   "esri/views/MapView",
@@ -169,14 +179,12 @@ require([
         var searchWidget = new Search({
             view: view,
             position: "top-left",
-            popupEnabled: false,
-            minSuggestCharacters:3,
+            minSuggestCharacters:4,
             includeDefaultSources:false,
             container: "omniva-search",
         });
 
-        sources = [
-            {
+        sources = [{
                 locator: searchLoc,
                 countryCode: "Lt",
                 placeholder: text_search_placeholder,
@@ -192,6 +200,7 @@ require([
             }
         ]
         searchWidget.sources = sources;
+
 
         zoomTo = function(graphic, id) {
             terminalDetails(id);
