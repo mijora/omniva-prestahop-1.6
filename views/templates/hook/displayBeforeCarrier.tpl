@@ -27,7 +27,6 @@
             $('.select2').select2();
         })
         {/literal}
-        console.log('sfdsf', "{$omniva_api_key}");
         var omnivalt_parcel_terminal_carrier_id = {$omnivalt_parcel_terminal_carrier_id}
     </script>
 
@@ -239,7 +238,7 @@ require([
         }
 
        findNearest = function() {
-            navigator.geolocation.getCurrentPosition((loc) => {
+            navigator.geolocation.getCurrentPosition(function(loc) {
                 findClosest(loc.coords.latitude, loc.coords.longitude)
             })
         }

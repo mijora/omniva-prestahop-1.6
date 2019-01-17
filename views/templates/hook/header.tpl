@@ -50,8 +50,8 @@
   <div class="omniva-modal-content">
     <div class="omniva-modal-header">
       <span class="close" id="terminalsModal">&times;</span>
-      <h5 style="display: inline">{l s='Omniva Terminalai'}</h5>
-      <hr/>
+      <h5 style="display: inline">{l s='Omniva paštomatai'}</h5>
+      <!--        <h5 style="display: inline; padding: 10px;display: inline-block;">{l s='Omniva paštomatai'}</h5> -->
     </div>
     <div class="omniva-modal-body" style="/*overflow: hidden;*/">
         <div id="map-omniva-terminals">
