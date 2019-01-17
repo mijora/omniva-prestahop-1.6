@@ -28,7 +28,7 @@
 {addJsDef omnivalt_parcel_terminal_carrier_id=$omnivalt_parcel_terminal_carrier_id}
 {addJsDef omnivaltdelivery_controller=$link->getModuleLink('omnivaltshipping', 'ajax')}
 
-{if isset($omniva_api_key) and $omniva_api_key != false}
+{if isset($omniva_api_key) and $omniva_api_key}
 
 <script>
     var omnivaSearch = "{l s='Įveskite adresą paieškos laukelyje, norint surasti paštomatus'}";
@@ -40,7 +40,7 @@
                 document.getElementById('omnivaLtModal').style.display = "none";
             } else if(event.target.id == 'show-omniva-map') {
                 document.getElementById('omnivaLtModal').style.display = "block";
-                document.querySelector('.found_terminals').innerHTML = omnivaSearch;
+                /* document.querySelector('.found_terminals').innerHTML = omnivaSearch; */
             }
         }
     {/literal}

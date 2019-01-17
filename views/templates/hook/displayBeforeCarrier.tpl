@@ -27,6 +27,7 @@
             $('.select2').select2();
         })
         {/literal}
+        console.log('sfdsf', "{$omniva_api_key}");
         var omnivalt_parcel_terminal_carrier_id = {$omnivalt_parcel_terminal_carrier_id}
     </script>
 
@@ -35,6 +36,8 @@
             #omnivalt_parcel_terminal_carrier_details{ margin-bottom: 5px }
         {/literal}
     </style>
+
+
 {if isset($omniva_api_key) and $omniva_api_key != false }
 
     <script type="text/javascript">
@@ -55,8 +58,8 @@
         var text_search_placeholder = "įveskite adresą";
         var base_url = window.location.origin;
         var map, geocoder, markerAddress, opp = true;
-        const image = base_url+'/modules/omnivaltshipping/sasi.png';
-        const locator_img = base_url+'/modules/omnivaltshipping/locator_img.png';
+        var image = base_url+'/modules/omnivaltshipping/sasi.png';
+        var locator_img = base_url+'/modules/omnivaltshipping/locator_img.png';
         var view, goToLayer, zoomTo, findNearest;
 
     function toRad(Value) 
@@ -79,49 +82,51 @@
       return d;
     }
 
-        function terminalSelected(terminal) {
-            omnivaSelect = document.getElementsByName("omnivalt_parcel_terminal");
-            var container = document.querySelector("select[name='omnivalt_parcel_terminal']");
-            var matches = document.querySelectorAll(".omnivaOption");
-            matches.forEach(node => {
-                if(node.getAttribute("value") == terminal)
-                    node.selected = 'selected';
-                else
-                    node.selected = false;
-            })
-            
-            $('select[name="omnivalt_parcel_terminal"]').show();
-            $('select[name="omnivalt_parcel_terminal"]').trigger("change");
-            document.getElementById('omnivaLtModal').style.display = "none";
-        }
+    function terminalSelected(terminal) {
+      omnivaSelect = document.getElementsByName("omnivalt_parcel_terminal");
+      var container = document.querySelector("select[name='omnivalt_parcel_terminal']");
+      var matches = document.querySelectorAll(".omnivaOption");
 
-        function selectToMap(terminal_id) {
-            console.log(terminal_id);
-            view.when(function(){
-                view.graphics.forEach(function(graphic){ 
-                    let omniva = Object.assign({}, graphic.omniva);
-                    if(graphic.omniva.id == terminal_id) {
-                        view.zoom = 13
-                        view.goTo(graphic);
-                        var popup = view.popup;
-                        popup.title =  omniva.name,
-                        popup.content = "<b>"+omniva.city+"</b><br><b>"+omniva.address+"</b><br><br>"+omniva.comment+"<br>"+
-                        "<Button onclick='terminalSelected("+omniva.id+");' class='omniva-btn'>"+select_terminal+"</Button>",                    
-                        popup.location = graphic.geometry;      
-                        popup.open();    
-                    }
-                }); 
-            });
+      for (var i = 0; i < matches.length; i++) {
+        node = matches[i]
+        if ( node.value == terminal) {
+          node.selected = 'selected';
+        } else {
+          node.selected = false;
         }
+      }
+            
+      $('select[name="omnivalt_parcel_terminal"]').show();
+      $('select[name="omnivalt_parcel_terminal"]').trigger("change");
+      document.getElementById('omnivaLtModal').style.display = "none";
+    }
+
+    function selectToMap(terminal_id) {
+        view.when(function(){
+            view.graphics.forEach(function(graphic){ 
+                var omniva = Object.assign({}, graphic.omniva);
+                if(graphic.omniva.id == terminal_id) {
+                    view.zoom = 13
+                    view.goTo(graphic);
+                    var popup = view.popup;
+                    popup.title =  omniva.name,
+                    popup.content = "<b>"+omniva.city+"</b><br><b>"+omniva.address+"</b><br><br>"+omniva.comment+"<br>"+
+                        "<Button onclick='terminalSelected("+omniva.id+");' class='omniva-btn'>"+select_terminal+"</Button>",                    
+                    popup.location = graphic.geometry;      
+                    popup.open();    
+                }
+            }); 
+        });
+    }
 
 window.onload = function() {
-        let element = document.getElementById('omniva-search');
+        var element = document.getElementById('omniva-search');
         element.addEventListener('keypress', function(evt){
-          let isEnter = evt.keyCode == 13;
-          if(isEnter) {
+          var isEnter = evt.keyCode == 13;
+          if (isEnter) {
               evt.preventDefault();
               selection = document.querySelector(".esri-search__suggestions-list > li");
-              if(selection)
+              if (selection)
                 selection.click();
           }
         });
@@ -153,9 +158,9 @@ require([
    height: "30px"
   };
 
-        for (i = 0; i < locations.length; i++) {  
-            let graphic = new Graphic({
-                geometry: {
+    for (i = 0; i < locations.length; i++) {  
+        var graphic = new Graphic({
+            geometry: {
                 type: "point",
                 longitude: locations[i][2],
                 latitude: locations[i][1],
@@ -179,6 +184,8 @@ require([
         var searchWidget = new Search({
             view: view,
             position: "top-left",
+            enableInfoWindow: false,
+            popupEnabled: false,
             minSuggestCharacters:4,
             includeDefaultSources:false,
             container: "omniva-search",
@@ -199,14 +206,15 @@ require([
                 }
             }
         ]
+
         searchWidget.sources = sources;
 
 
         zoomTo = function(graphic, id) {
             terminalDetails(id);
             view.graphics.forEach(function(graphic){ 
-                let omniva = Object.assign({}, graphic.omniva);
-                if(graphic.omniva.id == id) {
+                var omniva = Object.assign({}, graphic.omniva);
+                if (graphic && graphic.omniva && graphic.omniva.id == id) {
                     view.zoom = 15
                     view.goTo(graphic)
                     var popup = view.popup;
@@ -240,15 +248,21 @@ require([
             view.zoom = 12
             view.center = [lng, lat];
             filteredGRAF = view.graphics.map(function(graphic){
-                    let {latitude, longitude} = graphic.geometry
-                    let distance = calcCrow(lat, lng, latitude, longitude)
+                    var latitude = graphic.geometry.latitude
+                    var longitude = graphic.geometry.longitude
+                    var distance = calcCrow(lat, lng, latitude, longitude)
                     graphic.geometry.distance =distance.toFixed(2)
                     return graphic
             });
 
+            /* Exception for ie compiler having 2014 and lower versions */
+            if (filteredGRAF && filteredGRAF._items && filteredGRAF._items.length ) {
+                filteredGRAF = filteredGRAF._items;
+            }
+
             filteredGRAF.sort(function(a, b) {
-                let distOne = a.geometry.distance
-                let distTwo = b.geometry.distance
+                var distOne = a.geometry.distance
+                var distTwo = b.geometry.distance
                 if (parseFloat(distOne) < parseFloat(distTwo)) {
                     return -1;
                 }
@@ -261,16 +275,23 @@ require([
         if (filteredGRAF.length > 0) {
             var count = 15, counter = 0, html = '';
             
-            filteredGRAF.forEach(function(terminal){
-                let omniva = Object.assign({}, terminal.omniva);
-                let termGraphic = Object.assign({}, terminal)
-                let destination = [terminal.geometry.longitude, terminal.geometry.latitude]
-                let goTo = {
+                    for (var key in filteredGRAF) {
+
+                        if (filteredGRAF[key] && filteredGRAF[key].omniva) {
+                            terminal = filteredGRAF[key];
+                        } else {
+                            continue;
+                        }
+                   /* } filteredGRAF.forEach(function(terminal){*/
+                var omniva = Object.assign({}, terminal.omniva);
+                var termGraphic = Object.assign({}, terminal)
+                var destination = [terminal.geometry.longitude, terminal.geometry.latitude]
+                var goTo = {
                         target: destination,
                         zoom: 5
                         }
                 if(counter > count || terminal.geometry.distance < 0.00001) 
-                    return;
+                    continue;/*forEach return;*/
                 counter++;
                 html += '<li onclick="zoomTo(['+destination+'],'+omniva.id+')" ><div style="widthh:60%;"><a class="omniva-li">'+counter+'. <b>'+omniva.name+'</b></a> <b>'+terminal.geometry.distance+' km.</b>\
                             <div align="left" id="omn-'+omniva.id+'" class="omniva-details" style="display:none;">'+omniva.name+' <br/>\
@@ -278,7 +299,9 @@ require([
                             <button class="btn-marker" style="font-size:14px; padding:0px 5px;margin-bottom:10px; margin-top:5px;height:25px;" onclick="terminalSelected('+omniva.id+')">'+select_terminal+'</button>\
                             </div>\
                             </div></li>';
-            });
+            /*});*/
+            }
+
             document.querySelector('.found_terminals').innerHTML = '<ol class="omniva-terminals-list" start="1">'+html+'</ol>';
         }
     }
@@ -291,6 +314,7 @@ require([
 }
         {/literal}
     </script>
+        <button id="show-omniva-map" class="btn btn-basic btn-sm omniva-btn tooltip"><span class="tooltiptext">{l s='Teminalų paieška žemelapyje'}</span><i id="show-omniva-map" class="fa fa-map-marker-alt fa-lg" aria-hidden="true"></i></button>
+
 {/if}
-    <button id="show-omniva-map" class="btn btn-basic btn-sm omniva-btn tooltip"><span class="tooltiptext">{l s='Teminalų paieška žemelapyje'}</span><i id="show-omniva-map" class="fa fa-map-marker-alt fa-lg" aria-hidden="true"></i></button>
 </div>

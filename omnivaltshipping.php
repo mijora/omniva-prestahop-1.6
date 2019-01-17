@@ -313,7 +313,7 @@ class OmnivaltShipping extends CarrierModule
  
     if(Tools::isSubmit('submit'.$this->name))
     {
-        $fields = array('omnivalt_api_url','omnivalt_api_user', 'omnivalt_api_google', 'omnivalt_api_pass','omnivalt_send_off','omnivalt_cod','omnivalt_bank_account','omnivalt_company','omnivalt_address','omnivalt_city','omnivalt_postcode','omnivalt_countrycode','omnivalt_phone','omnivalt_pick_up_time_start','omnivalt_pick_up_time_finish');
+        $fields = array('omnivalt_map','omnivalt_api_url','omnivalt_api_user', 'omnivalt_api_pass','omnivalt_send_off','omnivalt_cod','omnivalt_bank_account','omnivalt_company','omnivalt_address','omnivalt_city','omnivalt_postcode','omnivalt_countrycode','omnivalt_phone','omnivalt_pick_up_time_start','omnivalt_pick_up_time_finish');
         $values = array();
         $all_filled = true;
         foreach ($fields as $field){
@@ -383,13 +383,6 @@ public function displayForm()
                 'name' => 'omnivalt_api_pass',
                 'size' => 20,
                 'required' => true
-            ),
-            array(
-              'type' => 'text',
-              'label' => $this->l('Google API key'),
-              'name' => 'omnivalt_api_google',
-              'size' => 50,
-              'required' => false
             ),
             array(
                 'type' => 'text',
@@ -479,6 +472,24 @@ public function displayForm()
                   'name' => 'name'
                 )
             ),
+            array(
+              'type' => 'switch',
+              'label' => $this->l('Display map'),
+              'name' => 'omnivalt_map',
+              'is_bool' => true,
+              'values' => array(
+                  array(
+                      'id' => 'label2_on',
+                      'value' => 1,
+                      'label' => $this->l('Enabled')
+                  ),
+                  array(
+                      'id' => 'label2_off',
+                      'value' => 0,
+                      'label' => $this->l('Disabled')
+                  )
+              )
+          ),
         ),
         'submit' => array(
             'title' => $this->l('Save'),
@@ -521,6 +532,7 @@ public function displayForm()
     if ($helper->fields_value['omnivalt_api_url'] == ""){
       $helper->fields_value['omnivalt_api_url'] = "https://217.159.234.93";
     }
+    $helper->fields_value['omnivalt_map'] = Configuration::get('omnivalt_map');
     $helper->fields_value['omnivalt_api_user'] = Configuration::get('omnivalt_api_user');
     $helper->fields_value['omnivalt_api_pass'] = Configuration::get('omnivalt_api_pass');
     $helper->fields_value['omnivalt_api_google'] = Configuration::get('omnivalt_api_google');
@@ -655,17 +667,12 @@ public function displayForm()
     }
     $sql = 'SELECT a.*, c.iso_code FROM '._DB_PREFIX_.'address AS a LEFT JOIN '._DB_PREFIX_.'country AS c ON c.id_country = a.id_country WHERE id_address="'.$params['cart']->id_address_delivery.'"';
     $address = Db::getInstance()->getRow($sql);
-    $apiKey = Configuration::get('omnivalt_api_google');
-    $apiKeyValidity = (strlen($apiKey)> 10);
-    if ($apiKeyValidity && false) {
-      $this->context->controller->addJS(array('https://maps.googleapis.com/maps/api/js?v=3&libraries=geometry,places&key=' . $apiKey,));
-      $this->context->controller->addJS(array( 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js', ));
-    }
 
-    
 
+    $apiKey = Configuration::get('omnivalt_map');
+    $apiKey = ($apiKey>0);
     $this->context->smarty->assign(array(
-            'omniva_api_key' => $apiKeyValidity,
+            'omniva_api_key' => $apiKey,
             'omnivalt_parcel_terminal_carrier_id' => Configuration::get('omnivalt_pt'),
             'parcel_terminals' => $this->getTerminalsOptions($selected,$address['iso_code']),
             'terminals_list' => json_encode($this->getTerminalForMap()),
@@ -698,23 +705,27 @@ public function displayForm()
   public function hookHeader($params)
   {
         if (in_array(Context::getContext()->controller->php_self, array('order-opc', 'order'))) {
-          $apiKey = Configuration::get('omnivalt_api_google');
-          $apiKeyValidity = (strlen($apiKey)> 10);
+
             $this->context->controller->addJS(array( 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js', ));
             $this->context->controller->addCSS(array( 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css', ));
             $this->context->controller->addCSS(array( 'https://use.fontawesome.com/releases/v5.3.1/css/all.css', ));
-            $this->context->controller->addJS(array( 'https://js.arcgis.com/4.9/', ));
             //$this->context->controller->addCSS(array('https://js.arcgis.com/4.9/esri/css/main.css', ));
             $this->context->controller-> addCSS(array('https://js.arcgis.com/4.9/esri/themes/light/main.css'));
             $this->context->controller->addJS(array( $this->_path . 'views/js/omnivaltDelivery.js', ));
-            $this->context->controller->addCSS(array( $this->_path.'views/css/omniva.css', ));
+
+            $apiKey = Configuration::get('omnivalt_map');
+            $apiKey = ($apiKey>0);
+            if($apiKey) {
+              $this->context->controller->addCSS(array( $this->_path.'views/css/omniva.css', ));
+              $this->context->controller->addJS(array( 'https://js.arcgis.com/4.9/', ));
+            }
             //$this->context->controller->addJS(array( $this->_path . 'views/js/esriMap.js', ));
             //$locations = json_encode($this->getTerminalForMap());
             //Media::addJsDef(array('omnivaltshipping' => array('locations' => $locations)));
 
 
             $this->smarty->assign(array(
-              'omniva_api_key' => $apiKeyValidity,
+              'omniva_api_key' => $apiKey,
               'omnivalt_parcel_terminal_carrier_id'=> Configuration::get('omnivalt_pt')
             ));
             
