@@ -19,7 +19,7 @@
 *}
 {addJsDef omnivaltdelivery_controller=$link->getModuleLink('omnivaltshipping', 'ajax')}
 <div id="omnivalt_parcel_terminal_carrier_details" style="display: block; margin-top: 10px;">
-    <select class="select2" name="omnivalt_parcel_terminal" style="max-width:300px;">{$parcel_terminals}</select>
+    <select class="select2" name="omnivalt_parcel_terminal" style="max-width:400px;">{$parcel_terminals}</select>
     <script type="text/javascript">
         {literal}
         $(document).ready(function(){

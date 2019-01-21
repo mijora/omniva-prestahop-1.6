@@ -33,7 +33,7 @@ class OmnivaltShipping extends CarrierModule
   {
     $this->name = 'omnivaltshipping';
     $this->tab = 'shipping_logistics';
-    $this->version = '1.1.0';
+    $this->version = '1.0.7';
     $this->author = 'Omniva.lt';
     $this->need_instance = 0;
     $this->ps_versions_compliancy = array('min' => '1.6', 'max' => '1.7'); 
@@ -574,6 +574,7 @@ public function displayForm()
           $grouped_options[(string)$terminal['A1_NAME']] = array();
         //$grouped_options[(string)$terminal['A1_NAME']][(string)$terminal['ZIP']] = $terminal['NAME'];
         $grouped_options[(string)$terminal['A1_NAME']][(string)$terminal['ZIP']] = $terminal['NAME']. ' ('.$terminal['A2_NAME'].')';
+
       }
       ksort($grouped_options);
       foreach ($grouped_options as $city=>$locs){
