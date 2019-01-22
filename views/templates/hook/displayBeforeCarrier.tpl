@@ -227,10 +227,10 @@ require([
         }
 
         function terminalDetails(id) {
-            Array.from(document.querySelectorAll(".omniva-details"))
-                .forEach(function(val) {
-                    val.style.display = 'none';
-            });
+            terminals = document.querySelectorAll(".omniva-details")
+            for(i=0; i <terminals.length; i++) {
+                terminals[i].style.display = 'none';
+            }
             id = 'omn-'+id;
             dispOmniva = document.getElementById(id)
             if(dispOmniva)
@@ -254,10 +254,10 @@ require([
                     return graphic
             });
 
-            /* Exception for ie compiler having 2014 and lower versions */
+            /* Exception for ie compiler having 2014 and lower versions *//*
             if (filteredGRAF && filteredGRAF._items && filteredGRAF._items.length ) {
                 filteredGRAF = filteredGRAF._items;
-            }
+            }*/
 
             filteredGRAF.sort(function(a, b) {
                 var distOne = a.geometry.distance
@@ -272,25 +272,20 @@ require([
             })
 
         if (filteredGRAF.length > 0) {
+            filteredGRAF = filteredGRAF.slice(1, 16);
             var count = 15, counter = 0, html = '';
-            
-                    for (var key in filteredGRAF) {
 
-                        if (filteredGRAF[key] && filteredGRAF[key].omniva) {
-                            terminal = filteredGRAF[key];
-                        } else {
-                            continue;
-                        }
-                   /* } filteredGRAF.forEach(function(terminal){*/
-                var omniva = Object.assign({}, terminal.omniva);
-                var termGraphic = Object.assign({}, terminal)
+            filteredGRAF.forEach(function(terminal){
+
+                var omniva = terminal.omniva;
+                var termGraphic = terminal;
                 var destination = [terminal.geometry.longitude, terminal.geometry.latitude]
+
                 var goTo = {
                         target: destination,
                         zoom: 5
                         }
-                if(counter > count || terminal.geometry.distance < 0.00001) 
-                    continue;/*forEach return;*/
+
                 counter++;
                 html += '<li onclick="zoomTo(['+destination+'],'+omniva.id+')" ><div style="widthh:60%;"><a class="omniva-li">'+counter+'. <b>'+omniva.name+'</b></a> <b>'+terminal.geometry.distance+' km.</b>\
                             <div align="left" id="omn-'+omniva.id+'" class="omniva-details" style="display:none;">'+omniva.name+' <br/>\
@@ -298,17 +293,18 @@ require([
                             <button class="btn-marker" style="font-size:14px; padding:0px 5px;margin-bottom:10px; margin-top:5px;height:25px;" onclick="terminalSelected('+omniva.id+')">'+select_terminal+'</button>\
                             </div>\
                             </div></li>';
-            /*});*/
-            }
+            })
 
             document.querySelector('.found_terminals').innerHTML = '<ol class="omniva-terminals-list" start="1">'+html+'</ol>';
         }
     }
 
-    searchWidget.on("select-result", function(event){
-        findClosest(event.result.feature.geometry.latitude, event.result.feature.geometry.longitude);
+    searchWidget.on("select-result", function(event) {
+        latitude = event.result.feature.geometry.latitude;
+	    longitude = event.result.feature.geometry.longitude;
+	    findClosest(latitude, longitude);
+        return true;
     });
-
 });
 }
         {/literal}
