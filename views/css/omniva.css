@@ -270,6 +270,10 @@
         width: 100%;
         margin-top:5px;
     }
+    
+   .esri-search__suggestions-menu {
+        height: 150px;
+    }
 }
 
  ol li { 
