@@ -33,7 +33,7 @@ class OmnivaltShipping extends CarrierModule
   {
     $this->name = 'omnivaltshipping';
     $this->tab = 'shipping_logistics';
-    $this->version = '1.0.7';
+    $this->version = '1.0.9';
     $this->author = 'Omniva.lt';
     $this->need_instance = 0;
     $this->ps_versions_compliancy = array('min' => '1.6', 'max' => '1.7'); 
@@ -677,6 +677,8 @@ public function displayForm()
             'omnivalt_parcel_terminal_carrier_id' => Configuration::get('omnivalt_pt'),
             'parcel_terminals' => $this->getTerminalsOptions($selected,$address['iso_code']),
             'terminals_list' => json_encode($this->getTerminalForMap()),
+            'mapLib' => $this->_path . 'views/js/esriLib.js',
+            'mapEsri' => $this->_path . 'views/js/esriMap.js',
         ));
 
         return $this->display(__file__, 'displayBeforeCarrier.tpl');
@@ -718,15 +720,11 @@ public function displayForm()
             $apiKey = ($apiKey>0);
             if($apiKey) {
               $this->context->controller->addCSS(array( $this->_path.'views/css/omniva.css', ));
-              $this->context->controller->addJS(array( 'https://js.arcgis.com/4.9/', ));
             }
-            //$this->context->controller->addJS(array( $this->_path . 'views/js/esriMap.js', ));
-            //$locations = json_encode($this->getTerminalForMap());
-            //Media::addJsDef(array('omnivaltshipping' => array('locations' => $locations)));
-
 
             $this->smarty->assign(array(
               'omniva_api_key' => $apiKey,
+              'mapEsri' => $this->_path . 'views/js/esriMap.js',
               'omnivalt_parcel_terminal_carrier_id'=> Configuration::get('omnivalt_pt')
             ));
             

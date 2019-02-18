@@ -39,7 +39,8 @@
 
 {if isset($omniva_api_key) and $omniva_api_key != false }
 
-    <script type="text/javascript">
+    <script language="Javascript"  type="text/javascript">
+
         var locations = {$terminals_list};
         var select_terminal = "{l s='Pasirinkti terminalą'}";
         {literal}
@@ -117,8 +118,10 @@
             }); 
         });
     }
-
-window.onload = function() {
+$(document).ready(function() {return;
+//window.onload = function() {console.log('[[ONLOAD onLOAD]]'); return;
+  //return;
+  console.log('[[ONLOAD onload]]')
         var element = document.getElementById('omniva-search');
         element.addEventListener('keypress', function(evt){
           var isEnter = evt.keyCode == 13;
@@ -306,10 +309,12 @@ require([
         return true;
     });
 });
-}
+})
         {/literal}
     </script>
-        <button id="show-omniva-map" class="btn btn-basic btn-sm omniva-btn tooltip"><span class="tooltiptext">{l s='Teminalų paieška žemelapyje'}</span><i id="show-omniva-map" class="fa fa-map-marker-alt fa-lg" aria-hidden="true"></i></button>
+        <button type="button" id="show-omniva-map" class="btn btn-basic btn-sm omniva-btn ">
+          <i id="show-omniva-map" class="fa fa-map-marker-alt fa-lg" aria-hidden="true"></i>
+        </button>
 
 {/if}
 </div>

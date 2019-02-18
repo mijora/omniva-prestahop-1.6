@@ -22,13 +22,19 @@
 <script type="text/javascript">
     var omnivalt_parcel_terminal_carrier_id = {$omnivalt_parcel_terminal_carrier_id};
     var omnivalt_parcel_terminal_error = '{l s='Please select parcel terminal' mod='omnivaltshipping'}';
+    {literal}  
+      dojoConfig: {  
+        isDebug: true
+      }
+    {/literal}
 </script>
-<!--  omnivalt_parcel_terminal_carrier [end] -->
+
 
 {addJsDef omnivalt_parcel_terminal_carrier_id=$omnivalt_parcel_terminal_carrier_id}
 {addJsDef omnivaltdelivery_controller=$link->getModuleLink('omnivaltshipping', 'ajax')}
 
 {if isset($omniva_api_key) and $omniva_api_key}
+<script defer type="text/javascript" src="{$mapEsri}" ></script>
 
 <script>
     var omnivaSearch = "{l s='Įveskite adresą paieškos laukelyje, norint surasti paštomatus'}";
@@ -40,7 +46,6 @@
                 document.getElementById('omnivaLtModal').style.display = "none";
             } else if(event.target.id == 'show-omniva-map') {
                 document.getElementById('omnivaLtModal').style.display = "block";
-                /* document.querySelector('.found_terminals').innerHTML = omnivaSearch; */
             }
         }
     {/literal}
@@ -51,7 +56,6 @@
     <div class="omniva-modal-header">
       <span class="close" id="terminalsModal">&times;</span>
       <h5 style="display: inline">{l s='Omniva paštomatai'}</h5>
-      <!--        <h5 style="display: inline; padding: 10px;display: inline-block;">{l s='Omniva paštomatai'}</h5> -->
     </div>
     <div class="omniva-modal-body" style="/*overflow: hidden;*/">
         <div id="map-omniva-terminals">
@@ -59,13 +63,6 @@
         <div class="omniva-search-bar" >
             <h3 style="margin-top: 0px;">{l s='Paštomatų adresai'}</h3>
             <div id="omniva-search"></div>
-            <!--
-            <input id="address-omniva" type="textbox" class="omniva-search"  height="48" placeholder="{l s='Surasti pagal adresą'}">
-            <div style="width: 98%; display: flex; justify-content: flex-end">
-                <input type="button" class="btn-address" value="{l s='Surasti'}" onclick="codeAddress()">
-                <input type="button" class="btn-address-gps" onclick="findNearest()" value="{l s='Arčiausiai manęs'}"/>
-            </div>
-            -->
             <div class="found_terminals scrollbar" id="style-8"></div>
         </div>
     </div>
