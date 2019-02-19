@@ -676,9 +676,10 @@ public function displayForm()
             'omniva_api_key' => $apiKey,
             'omnivalt_parcel_terminal_carrier_id' => Configuration::get('omnivalt_pt'),
             'parcel_terminals' => $this->getTerminalsOptions($selected,$address['iso_code']),
-            'terminals_list' => json_encode($this->getTerminalForMap()),
+            'terminals_list' => json_encode($this->getTerminalForMap($selected,$address['iso_code'])),
             'mapLib' => $this->_path . 'views/js/esriLib.js',
             'mapEsri' => $this->_path . 'views/js/esriMap.js',
+            'map_country'    => $address['iso_code']
         ));
 
         return $this->display(__file__, 'displayBeforeCarrier.tpl');

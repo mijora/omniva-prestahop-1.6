@@ -1,4 +1,75 @@
-//window.onload = function() {console.log('[[ONLOAD onload]]')
+function popTemplate(id, name, city, address, comment) {
+  return {
+  title: name,
+  content: "<b>"+city+"</b><br> " +
+              "<b>"+address+"</b><br> " +
+              comment+"<br>  " +
+              "<Button onclick='terminalSelected("+id+");' class='omniva-btn'>"+select_terminal+"</Button>",
+  }
+}
+
+var base_url = window.location.origin;
+var map, geocoder, markerAddress, opp = true;
+var image = base_url+'/modules/omnivaltshipping/sasi.png';
+var locator_img = base_url+'/modules/omnivaltshipping/locator_img.png';
+var view, goToLayer, zoomTo, findNearest;
+
+function toRad(Value) 
+{
+  return Value * Math.PI / 180;
+}
+
+function calcCrow(lat1, lon1, lat2, lon2) 
+{
+  var R = 6371;
+  var dLat = toRad(lat2-lat1);
+  var dLon = toRad(lon2-lon1);
+  var lat1 = toRad(lat1);
+  var lat2 = toRad(lat2);
+
+  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+  Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var d = R * c;
+  return d;
+}
+
+function terminalSelected(terminal) {
+  omnivaSelect = document.getElementsByName("omnivalt_parcel_terminal");
+  var container = document.querySelector("select[name='omnivalt_parcel_terminal']");
+  var matches = document.querySelectorAll(".omnivaOption");
+
+  for (var i = 0; i < matches.length; i++) {
+    node = matches[i]
+    if ( node.value == terminal) {
+      node.selected = 'selected';
+    } else {
+      node.selected = false;
+    }
+  }
+    
+  $('select[name="omnivalt_parcel_terminal"]').show();
+  $('select[name="omnivalt_parcel_terminal"]').trigger("change");
+  document.getElementById('omnivaLtModal').style.display = "none";
+}
+
+function selectToMap(terminal_id) {
+view.when(function(){
+  view.graphics.forEach(function(graphic){ 
+      var omniva = Object.assign({}, graphic.omniva);
+      if(graphic.omniva.id == terminal_id) {
+          view.zoom = 13
+          view.goTo(graphic);
+          var popup = view.popup;
+          popup.title =  omniva.name,
+          popup.content = "<b>"+omniva.city+"</b><br><b>"+omniva.address+"</b><br><br>"+omniva.comment+"<br>"+
+              "<Button onclick='terminalSelected("+omniva.id+");' class='omniva-btn'>"+select_terminal+"</Button>",                    
+          popup.location = graphic.geometry;      
+          popup.open();    
+      }
+  }); 
+});
+}
 
 function loadError(oError) {
   throw new URIError("The script " + oError.target.src + " didn't load correctly.");
@@ -32,13 +103,24 @@ require([
 ], function(
   Map, MapView, Graphic, Search, Locator
 ) {
-
+  document.getElementById('omniva-search').innerHTML = "";
   var map = new Map({
     basemap: "streets-navigation-vector"
   });
 
+  switch (map_country) {
+    case 'LT':
+      m_coordinates = [23.96472, 54.999921];
+      break;
+    case 'EE':
+      m_coordinates = [24.753574, 59.436962];
+      break;
+    default:
+      m_coordinates = [24.105078, 56.946285];
+  }
+
    view = new MapView({
-    center: [23.96472, 54.999921],
+    center: m_coordinates,
     container: "map-omniva-terminals",
     map: map,
     zoom: 6

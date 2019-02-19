@@ -34,8 +34,6 @@
 {addJsDef omnivaltdelivery_controller=$link->getModuleLink('omnivaltshipping', 'ajax')}
 
 {if isset($omniva_api_key) and $omniva_api_key}
-<script defer type="text/javascript" src="{$mapEsri}" ></script>
-
 <script>
     var omnivaSearch = "{l s='Įveskite adresą paieškos laukelyje, norint surasti paštomatus'}";
     {literal}
