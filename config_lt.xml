@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
 	<name>omnivaltshipping</name>
-	<displayName><![CDATA[Omnivalt siuntimas]]></displayName>
+	<displayName><![CDATA[Omniva siuntimas]]></displayName>
 	<version><![CDATA[1.0.9]]></version>
-	<description><![CDATA[Omnivalt siuntimo modulis]]></description>
+	<description><![CDATA[Omniva siuntimo modulis]]></description>
 	<author><![CDATA[Omniva.lt]]></author>
 	<tab><![CDATA[shipping_logistics]]></tab>
 	<confirmUninstall><![CDATA[Ar tikrai norite pašalinti?]]></confirmUninstall>
