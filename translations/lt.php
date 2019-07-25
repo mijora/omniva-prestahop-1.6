@@ -6,6 +6,7 @@ $_MODULE['<{omnivaltshipping}prestashop>omnivaltshipping_3a2d9139fa29ef65a5823cb
 $_MODULE['<{omnivaltshipping}prestashop>omnivaltshipping_af0bcc07504008fec0f8acdf866c8131'] = 'Omnivalt siuntimo modulis';
 $_MODULE['<{omnivaltshipping}prestashop>omnivaltshipping_876f23178c29dc2552c0b48bf23cd9bd'] = 'Ar tikrai norite pašalinti?';
 $_MODULE['<{omnivaltshipping}prestashop>omnivaltshipping_a11bab71256bab70c82c11a2a48f493f'] = 'Prašome sukonfigūruoti modulio nustatymus';
+$_MODULE['<{omnivaltshipping}prestashop>omnivaltshipping_bdd94fedfcc5acb861358dd7138634a1'] = 'Omniva užsakymai';
 $_MODULE['<{omnivaltshipping}prestashop>omnivaltshipping_af5314ecb1403feaf3ab13ed3512469a'] = 'Visi laukai privalomi';
 $_MODULE['<{omnivaltshipping}prestashop>omnivaltshipping_c888438d14855d7d96a2724ee9c306bd'] = 'Nustatymai atnaujinti';
 $_MODULE['<{omnivaltshipping}prestashop>omnivaltshipping_bafd7322c6e97d25b6299b5d6fe8920b'] = 'Ne';
@@ -28,6 +29,9 @@ $_MODULE['<{omnivaltshipping}prestashop>omnivaltshipping_29d284ecbc8948a12da4e0c
 $_MODULE['<{omnivaltshipping}prestashop>omnivaltshipping_436c250ab77a82a2d2db508f6158eb9b'] = 'Išsiuntimo tipas';
 $_MODULE['<{omnivaltshipping}prestashop>omnivaltshipping_931df114cd35e909a7327afe5c4a6226'] = 'Pasirinkite išsiuntimo iš parduotuvės tipą';
 $_MODULE['<{omnivaltshipping}prestashop>omnivaltshipping_5030551cd5ca2f5644f3d4e00ff6eba7'] = 'COD';
+$_MODULE['<{omnivaltshipping}prestashop>omnivaltshipping_d3d53a3fe81ff47e673df4c64e9a1b46'] = 'Rodyti paštomatų žemėlapį';
+$_MODULE['<{omnivaltshipping}prestashop>omnivaltshipping_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Įjungta';
+$_MODULE['<{omnivaltshipping}prestashop>omnivaltshipping_b9f5c797ebbf55adccdd8539a65a0241'] = 'Išjungta';
 $_MODULE['<{omnivaltshipping}prestashop>omnivaltshipping_c9cc8cce247e49bae79f15173ce97354'] = 'Išsaugoti';
 $_MODULE['<{omnivaltshipping}prestashop>omnivaltshipping_630f6dc397fe74e52d5189e2c80f282b'] = 'Atgal į sąrašą';
 $_MODULE['<{omnivaltshipping}prestashop>omnivaltshipping_bdbe7b8df388fa4d9aebb12e24868551'] = 'Pasirinkite siuntų terminalą';
@@ -49,9 +53,8 @@ $_MODULE['<{omnivaltshipping}prestashop>omnivaorders_96b0141273eabab320119c467cd
 $_MODULE['<{omnivaltshipping}prestashop>omnivaorders_3ad6cb6100190c8f81e99fd52debf7ef'] = 'Lipdukai';
 $_MODULE['<{omnivaltshipping}prestashop>omnivaorders_76c3e002d3c052bd6a909366a8dc3845'] = 'Manifestas';
 $_MODULE['<{omnivaltshipping}prestashop>omnivaorders_72ef2b9b6965d078e3c7f95487a82d1c'] = 'Praleisti';
-$_MODULE['<{omnivaltshipping}prestashop>omnivaorders_8b58ae069e137ce915db349402a00947'] = 'Praleisti visus';
-$_MODULE['<{omnivaltshipping}prestashop>omnivaorders_5c5f06440fcb85cd5c8cfafe32e34b78'] = 'Sugeneruoti';
 $_MODULE['<{omnivaltshipping}prestashop>omnivaorders_5af186f24df84335599e0ec923669d9b'] = 'Pridėti į manifestą';
+$_MODULE['<{omnivaltshipping}prestashop>omnivaorders_5c5f06440fcb85cd5c8cfafe32e34b78'] = 'Sugeneruoti';
 $_MODULE['<{omnivaltshipping}prestashop>blockinorder_b2f062385cd680e6de20a414d61c0d67'] = 'Paketai';
 $_MODULE['<{omnivaltshipping}prestashop>blockinorder_8c489d0946f66d17d73f26366a4bf620'] = 'Svoris';
 $_MODULE['<{omnivaltshipping}prestashop>blockinorder_b4d1403c4db49bf1b222179cca5b794f'] = 'C.O.D.';
@@ -63,7 +66,17 @@ $_MODULE['<{omnivaltshipping}prestashop>blockinorder_af5a5195fe01aae1edf7c0770e8
 $_MODULE['<{omnivaltshipping}prestashop>blockinorder_5050224de02ab60008e2fe590f0b7bea'] = 'Generuoti lipduką';
 $_MODULE['<{omnivaltshipping}prestashop>blockinorder_165977bc8006193936272e96ef4fd7a2'] = 'Atspausdinti lipduką';
 $_MODULE['<{omnivaltshipping}prestashop>blockinorder_a48721091a600c187f14daf610e22a32'] = 'Sėkmingai pridėta.';
+$_MODULE['<{omnivaltshipping}prestashop>displaybeforecarrier_ba7db2627418d3f2e83488ddca125cd2'] = 'Žiūrėti žemėlapyje';
+$_MODULE['<{omnivaltshipping}prestashop>header_ab6818405d4e2ece132a8b65c28e9bb9'] = 'Pasirinkti paštomatą';
+$_MODULE['<{omnivaltshipping}prestashop>header_dd238d9d1c8619a2c999cdc7cb674264'] = 'Įveskite pašto kodą';
+$_MODULE['<{omnivaltshipping}prestashop>header_d26e7830f405fcd6887d766a0ae8787b'] = 'Vieta nerasta';
+$_MODULE['<{omnivaltshipping}prestashop>header_271e53f729450d8c0e1c7c3bc00c43a7'] = 'Įveskite pašto kodą / adresą';
+$_MODULE['<{omnivaltshipping}prestashop>header_1abeb90e19a533f38477e18ce142ccd5'] = 'Rodyti žemėlapyje';
+$_MODULE['<{omnivaltshipping}prestashop>header_146ffe2fd9fa5bec3b63b52543793ec7'] = 'Rodyti daugiau';
 $_MODULE['<{omnivaltshipping}prestashop>header_0b110192097725bcb39ad4c49e319a42'] = 'Pasirinkite siuntų terminalą';
+$_MODULE['<{omnivaltshipping}prestashop>header_ec9f1fac0b8a074f11b706dc26f426f4'] = 'Omiva paštomatai';
+$_MODULE['<{omnivaltshipping}prestashop>header_bbd99246558810170f2bbba7b75f517c'] = 'Paštomatų adresai';
+$_MODULE['<{omnivaltshipping}prestashop>header_630f6dc397fe74e52d5189e2c80f282b'] = 'Atgal į sąrašą';
 $_MODULE['<{omnivaltshipping}prestashop>trackinginfo_73e0c6ff256e6be1b9ac2236bdbd697a'] = 'Siuntos sekimo informacija';
 $_MODULE['<{omnivaltshipping}prestashop>trackinginfo_44749712dbec183e983dcd78a7736c41'] = 'Data';
 $_MODULE['<{omnivaltshipping}prestashop>trackinginfo_a4ecfc70574394990cf17bd83df499f7'] = 'Įvykis';

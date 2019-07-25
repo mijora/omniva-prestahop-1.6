@@ -33,7 +33,7 @@ class OmnivaltShipping extends CarrierModule
   {
     $this->name = 'omnivaltshipping';
     $this->tab = 'shipping_logistics';
-    $this->version = '1.0.9';
+    $this->version = '1.0.10';
     $this->author = 'Omniva.lt';
     $this->need_instance = 0;
     $this->ps_versions_compliancy = array('min' => '1.6', 'max' => '1.7'); 
@@ -530,7 +530,7 @@ public function displayForm()
     // Load current value
     $helper->fields_value['omnivalt_api_url'] = Configuration::get('omnivalt_api_url');
     if ($helper->fields_value['omnivalt_api_url'] == ""){
-      $helper->fields_value['omnivalt_api_url'] = "https://217.159.234.93";
+      $helper->fields_value['omnivalt_api_url'] = "https://edixml.post.ee";
     }
     $helper->fields_value['omnivalt_map'] = Configuration::get('omnivalt_map');
     $helper->fields_value['omnivalt_api_user'] = Configuration::get('omnivalt_api_user');
@@ -670,16 +670,16 @@ public function displayForm()
     $address = Db::getInstance()->getRow($sql);
 
 
-    $apiKey = Configuration::get('omnivalt_map');
-    $apiKey = ($apiKey>0);
+    $show_map = Configuration::get('omnivalt_map');
     $this->context->smarty->assign(array(
-            'omniva_api_key' => $apiKey,
+            'omniva_map' => $show_map,
             'omnivalt_parcel_terminal_carrier_id' => Configuration::get('omnivalt_pt'),
             'parcel_terminals' => $this->getTerminalsOptions($selected,$address['iso_code']),
             'terminals_list' => json_encode($this->getTerminalForMap($selected,$address['iso_code'])),
-            'mapLib' => $this->_path . 'views/js/esriLib.js',
-            'mapEsri' => $this->_path . 'views/js/esriMap.js',
-            'map_country'    => $address['iso_code']
+            //'mapLib' => $this->_path . 'views/js/esriLib.js',
+            //'mapEsri' => $this->_path . 'views/js/esriMap.js',
+            'module_url' =>Tools::getHttpHost(true).__PS_BASE_URI__.'modules/'.$this->name.'/',
+            'omniva_current_country' => $address['iso_code']
         ));
 
         return $this->display(__file__, 'displayBeforeCarrier.tpl');
@@ -710,22 +710,23 @@ public function displayForm()
   {
         if (in_array(Context::getContext()->controller->php_self, array('order-opc', 'order'))) {
 
-            $this->context->controller->addJS(array( 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js', ));
+             $this->context->controller->addJS(array( 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js', ));
             $this->context->controller->addCSS(array( 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css', ));
-            $this->context->controller->addCSS(array( 'https://use.fontawesome.com/releases/v5.3.1/css/all.css', ));
-            //$this->context->controller->addCSS(array('https://js.arcgis.com/4.9/esri/css/main.css', ));
-            $this->context->controller-> addCSS(array('https://js.arcgis.com/4.9/esri/themes/light/main.css'));
-            $this->context->controller->addJS(array( $this->_path . 'views/js/omnivaltDelivery.js', ));
+            //$this->context->controller->addCSS(array( 'https://use.fontawesome.com/releases/v5.3.1/css/all.css', ));
+            $this->context->controller->addCSS(array( $this->_path.'views/css/leaflet.css', ));
+            $this->context->controller->addJS(array( $this->_path . 'views/js/leaflet.js', ));
+            $this->context->controller->addJS(array( $this->_path . 'views/js/omniva.js', ));
 
-            $apiKey = Configuration::get('omnivalt_map');
-            $apiKey = ($apiKey>0);
-            if($apiKey) {
+            $show_map = Configuration::get('omnivalt_map');
+            //$apiKey = ($apiKey>0);
+            //if($apiKey) {
               $this->context->controller->addCSS(array( $this->_path.'views/css/omniva.css', ));
-            }
+            //}
 
             $this->smarty->assign(array(
-              'omniva_api_key' => $apiKey,
-              'mapEsri' => $this->_path . 'views/js/esriMap.js',
+              'omniva_map' => $show_map,
+              //'mapEsri' => $this->_path . 'views/js/esriMap.js',
+              'module_url' =>Tools::getHttpHost(true).__PS_BASE_URI__.'modules/'.$this->name.'/',
               'omnivalt_parcel_terminal_carrier_id'=> Configuration::get('omnivalt_pt')
             ));
             

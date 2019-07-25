@@ -17,33 +17,32 @@
 * versions in the future.
 * ****************************************************
 *}
-{addJsDef omnivaltdelivery_controller=$link->getModuleLink('omnivaltshipping', 'ajax')}
-<div id="omnivalt_parcel_terminal_carrier_details" style="display: block; margin-top: 10px;">
-  <select class="select2" name="omnivalt_parcel_terminal" style="max-width:400px;">{$parcel_terminals}</select>
-  <script type="text/javascript">
+<script>
+    var omniva_current_country = '{$omniva_current_country}';
+    var omniva_postcode = '{$omniva_postcode}';
+    var omnivaTerminals = {$terminals_list|@json_encode nofilter}
+    var show_omniva_map = {$omniva_map};
     {literal}
-      $(document).ready(function(){
-        omnivaltDelivery.init();
-        $('.select2').select2();
-      })
+    $(document).ready(function(){
+        if ($('#omnivalt_parcel_terminal_carrier_details select').length){
+            $('#omnivalt_parcel_terminal_carrier_details select').omniva({showMap: show_omniva_map});
+            omnivaltDelivery.init();
+            $('.delivery-options .delivery-option input[type="radio"]').on('click',function(){
+                omnivaltDelivery.init();
+            });
+        }
+    });
     {/literal}
-    var omnivalt_parcel_terminal_carrier_id = {$omnivalt_parcel_terminal_carrier_id}
-  </script>
-  <style>
-    {literal}
-      #omnivalt_parcel_terminal_carrier_details{ margin-bottom: 5px }
-    {/literal}
-  </style>
-  {if isset($omniva_api_key) and $omniva_api_key != false }
-    <script language="Javascript"  type="text/javascript">
-      var locations = {$terminals_list};
-      var map_country = "{$map_country}";
-      var select_terminal = "{l s='Pasirinkti terminalą'}";
-      var text_search_placeholder = "{l s='įveskite adresą'}";
-    </script>
-    <script defer type="text/javascript" src="{$mapEsri}" ></script>
-    <button type="button" id="show-omniva-map" class="btn btn-basic btn-sm omniva-btn ">
-      <i id="show-omniva-map" class="fa fa-map-marker-alt fa-lg" aria-hidden="true"></i>
-    </button>
-  {/if}
+</script>
+<div id="omnivalt_parcel_terminal_carrier_details" style="display: none; margin-top: 10px;">
+    <select class="" name="omnivalt_parcel_terminal" style = "width:100%;">{$parcel_terminals nofilter}</select>
+
+    <style>
+        {literal}
+            #omnivalt_parcel_terminal_carrier_details{ margin-bottom: 5px }
+        {/literal}
+    </style>
+{if $omniva_map != false } 
+  <button type="button" id="show-omniva-map" class="btn btn-basic btn-sm omniva-btn" style = "display: none;">{l s='Show parcel terminals map' mod='omnivaltshipping'} <img src = "{$module_url}sasi.png" title = "{l s='Show parcel terminals map' mod='omnivaltshipping'}"/></button>
+{/if}
 </div>
