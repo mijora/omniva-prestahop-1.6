@@ -61,7 +61,7 @@ var omniva_addrese_change = false;
             e.preventDefault();            
             showModal();
         });
-        $('.terminal-container').on('click','#show-omniva-map',function(e){
+        $('body').on('click','#show-omniva-map',function(e){
             e.preventDefault();            
             showModal();
         });
