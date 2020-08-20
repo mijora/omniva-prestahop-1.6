@@ -119,12 +119,12 @@ class OmnivaltshippingOmnivaltadminajaxModuleFrontController extends ModuleFront
     
     protected function printBulkLabels(){
         require_once(_PS_TOOL_DIR_.'tcpdf/tcpdf.php');
-        require_once(_PS_MODULE_DIR_.'omnivaltshipping/fpdi/fpdi.php');
+        require_once(_PS_MODULE_DIR_.'omnivaltshipping/fpdi/autoload.php');
         $orderIds = trim($_REQUEST['order_ids'],',');
         $orderIds = explode(',',$orderIds);
         OmnivaltShipping::checkForClass('OrderInfo');
         $object = '';
-        $pdf = new FPDI();
+        $pdf = new \setasign\Fpdi\Tcpdf\Fpdi('P');
         $pdf->setPrintHeader(false);
         $pdf->setPrintFooter(false);
         if (is_array($orderIds))
@@ -199,13 +199,13 @@ if( $this->labelsMix >= 4) {
   $tplidx = $pdf->ImportPage(1);
   
     if($this->labelsMix == 0) {
-    $pdf->useTemplate($tplidx, 5, 15, 94.5, 108, true);
+    $pdf->useTemplate($tplidx, 5, 15, 94.5, 108, false);
   } else if ($this->labelsMix == 1) {
-    $pdf->useTemplate($tplidx, 110, 15, 94.5, 108, true);
+    $pdf->useTemplate($tplidx, 110, 15, 94.5, 108, false);
   } else if ($this->labelsMix == 2) {
-    $pdf->useTemplate($tplidx, 5, 170, 94.5, 108, true);  
+    $pdf->useTemplate($tplidx, 5, 170, 94.5, 108, false);  
   } else if ($this->labelsMix == 3) {
-    $pdf->useTemplate($tplidx, 110, 170, 94.5, 108, true);  
+    $pdf->useTemplate($tplidx, 110, 170, 94.5, 108, false);  
   } else {echo $this->_module->l('Problems with labels count, please, select one order!!!');exit();}
   //$pages++;
   $this->labelsMix++;
