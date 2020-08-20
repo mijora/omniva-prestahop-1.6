@@ -20,6 +20,7 @@ class OmnivaltShipping extends CarrierModule
   );
 
   private static $_classMap = array(
+    'OmnivaPatcher' => 'omnivapatcher.php',
     'OrderInfo' => 'classes/OrderInfo.php',
   );
 
@@ -33,7 +34,7 @@ class OmnivaltShipping extends CarrierModule
   {
     $this->name = 'omnivaltshipping';
     $this->tab = 'shipping_logistics';
-    $this->version = '1.0.12';
+    $this->version = '1.1.5';
     $this->author = 'Omniva.lt';
     $this->need_instance = 0;
     $this->ps_versions_compliancy = array('min' => '1.6', 'max' => '1.7');
@@ -317,6 +318,14 @@ class OmnivaltShipping extends CarrierModule
 
   public function getContent()
   {
+    
+    if (Tools::isSubmit('patch' . $this->name)) {
+      self::checkForClass('OmnivaPatcher');
+
+      $patcher = new OmnivaPatcher();
+      $this->runPatcher($patcher);
+    }
+
     $output = null;
 
     if (Tools::isSubmit('submit' . $this->name)) {
@@ -504,6 +513,25 @@ class OmnivaltShipping extends CarrierModule
       )
     );
 
+    self::checkForClass('OmnivaPatcher');
+
+    $patcher = new OmnivaPatcher();
+
+    $installed_patches = $patcher->getInstalledPatches();
+    $latest_patch = 'OmnivaPatcher Installed';
+    if ($installed_patches) {
+      $latest_patch = $installed_patches[count($installed_patches) - 1];
+    }
+
+    $patch_link = AdminController::$currentIndex . '&configure=' . $this->name . '&patch' . $this->name . '&token=' . Tools::getAdminTokenLite('AdminModules');
+
+    $fields_form[0]['form']['input'][] = array(
+      'type' => 'html',
+      'label' => 'Patch:',
+      'name' => 'patcher_info',
+      'html_content' => '<label class="control-label"><b>' . $latest_patch . '</b></label><br><a class="btn btn-default" href="' . $patch_link . '">Check & Install Patches</a>',
+    );
+
     $helper = new HelperForm();
 
     // Module, token and currentIndex
@@ -556,6 +584,16 @@ class OmnivaltShipping extends CarrierModule
     $helper->fields_value['omnivalt_pick_up_time_finish'] = Configuration::get('omnivalt_pick_up_time_finish') ? Configuration::get('omnivalt_pick_up_time_finish') : '17:00';
     return $helper->generateForm($fields_form);
   }
+  
+  private function runPatcher(OmnivaPatcher $patcherInstance)
+  {
+    $last_check = Configuration::get('omnivalt_patcher_update');
+
+    $patcherInstance->startUpdate(Configuration::get('omnivalt_api_user'), Configuration::get('PS_SHOP_EMAIL'));
+
+    Configuration::updateValue('omnivalt_patcher_update', time());
+  }
+
   private function getTerminalsOptions($selected = '', $country = "")
   {
     if (!$country) {
@@ -806,12 +844,10 @@ class OmnivaltShipping extends CarrierModule
       $address = Db::getInstance()->getRow($sql);
       $countryCode = $address['iso_code'];
 
-      if (file_exists("../modules/" . $this->name . '/pdf/' . $order->id . '.pdf')) {
-        $label_url = Tools::getHttpHost(true) . __PS_BASE_URI__ . '/modules/' . $this->name . '/pdf/' . $order->id . '.pdf';
-      }
       self::checkForClass('OrderInfo');
       $OrderInfo = new OrderInfo();
       $OrderInfo = $OrderInfo->getOrderInfo($order->id);
+      $label_url = $this->context->link->getModuleLink("omnivaltshipping", "omnivaltadminajax", array("action"=>"bulklabels", "order_ids"=>$order->id));
       $this->smarty->assign(array(
         'total_weight' => isset($OrderInfo['weight']) ? $OrderInfo['weight'] : $order->getTotalWeight(),
         'packs' => isset($OrderInfo['packs']) ? $OrderInfo['packs'] : 1,
