@@ -34,7 +34,7 @@ class OmnivaltShipping extends CarrierModule
   {
     $this->name = 'omnivaltshipping';
     $this->tab = 'shipping_logistics';
-    $this->version = '1.1.5';
+    $this->version = '1.1.6';
     $this->author = 'Omniva.lt';
     $this->need_instance = 0;
     $this->ps_versions_compliancy = array('min' => '1.6', 'max' => '1.7');
@@ -329,7 +329,7 @@ class OmnivaltShipping extends CarrierModule
     $output = null;
 
     if (Tools::isSubmit('submit' . $this->name)) {
-      $fields = array('omnivalt_map', 'omnivalt_api_url', 'omnivalt_api_user', 'omnivalt_api_pass', 'omnivalt_send_off', 'omnivalt_cod', 'omnivalt_bank_account', 'omnivalt_company', 'omnivalt_address', 'omnivalt_city', 'omnivalt_postcode', 'omnivalt_countrycode', 'omnivalt_phone', 'omnivalt_pick_up_time_start', 'omnivalt_pick_up_time_finish');
+      $fields = array('omnivalt_map', 'omnivalt_api_url', 'omnivalt_api_user', 'omnivalt_api_pass', 'omnivalt_send_off', 'omnivalt_cod', 'omnivalt_print_type', 'omnivalt_bank_account', 'omnivalt_company', 'omnivalt_address', 'omnivalt_city', 'omnivalt_postcode', 'omnivalt_countrycode', 'omnivalt_phone', 'omnivalt_pick_up_time_start', 'omnivalt_pick_up_time_finish');
       $values = array();
       $all_filled = true;
       foreach ($fields as $field) {
@@ -363,7 +363,7 @@ class OmnivaltShipping extends CarrierModule
   {
     // Get default language
     $default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
-    $options = array(
+    $options_sendoff = array(
       array(
         'id_option' => 'pt',
         'name' => $this->l('Parcel terminal')
@@ -371,6 +371,16 @@ class OmnivaltShipping extends CarrierModule
       array(
         'id_option' => 'c',
         'name' => $this->l('Courier')
+      ),
+    );
+    $options_print = array(
+      array(
+        'id_option' => '4',
+        'name' => $this->l('A4 (4 labels)')
+      ),
+      array(
+        'id_option' => '1',
+        'name' => $this->l('Original (single label)')
       ),
     );
     // Init Fields form array
@@ -471,7 +481,7 @@ class OmnivaltShipping extends CarrierModule
           'desc' => $this->l('Please select send off from store type'),
           'required' => true,
           'options' => array(
-            'query' => $options,
+            'query' => $options_sendoff,
             'id' => 'id_option',
             'name' => 'name'
           )
@@ -484,6 +494,19 @@ class OmnivaltShipping extends CarrierModule
           'required' => true,
           'options' => array(
             'query' => $this->cod_options(),
+            'id' => 'id_option',
+            'name' => 'name'
+          )
+        ),
+        array(
+          'type' => 'select',
+          'lang' => true,
+          'label' => $this->l('Label print type'),
+          'name' => 'omnivalt_print_type',
+          'desc' => $this->l('How much labels print in one PDF page'),
+          'required' => true,
+          'options' => array(
+            'query' => $options_print,
             'id' => 'id_option',
             'name' => 'name'
           )
@@ -573,6 +596,7 @@ class OmnivaltShipping extends CarrierModule
     $helper->fields_value['omnivalt_api_google'] = Configuration::get('omnivalt_api_google');
     $helper->fields_value['omnivalt_send_off'] = Configuration::get('omnivalt_send_off');
     $helper->fields_value['omnivalt_cod'] = Configuration::get('omnivalt_cod');
+    $helper->fields_value['omnivalt_print_type'] = Configuration::get('omnivalt_print_type');
     $helper->fields_value['omnivalt_company'] = Configuration::get('omnivalt_company');
     $helper->fields_value['omnivalt_address'] = Configuration::get('omnivalt_address');
     $helper->fields_value['omnivalt_city'] = Configuration::get('omnivalt_city');
