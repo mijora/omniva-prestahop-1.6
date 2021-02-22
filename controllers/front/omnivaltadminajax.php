@@ -199,39 +199,42 @@ class OmnivaltshippingOmnivaltadminajaxModuleFrontController extends ModuleFront
         $this->_module->changeOrderStatus($orderId, $this->_module->getCustomOrderState());
         $pagecount = $pdf->setSourceFile($label_url);
         if (file_exists($label_url)) { unlink($label_url); }
-        /*for ($i = 1; $i <= $pagecount; $i++) {
-              $tplidx = $pdf->ImportPage($i);
-              $s = $pdf->getTemplatesize($tplidx);
-              $pdf->AddPage('P', array($s['w'], $s['h']));
-              $pdf->useTemplate($tplidx);  
-            }
-            */
-        /*------------- multiple -------------------*/
-        $newPG = array(0, 4, 8, 12, 16, 20, 24, 28, 32);
-        if ($this->labelsMix >= 4) {
-          $pdf->AddPage();
-          $page = 1;
-          $templateId = $pdf->importPage($page);
-          $this->labelsMix = 0;
-        }
-        //for ($i = 1; $i <= $pagecount; $i++) {
-        $tplidx = $pdf->ImportPage(1);
 
-        if ($this->labelsMix == 0) {
-          $pdf->useTemplate($tplidx, 5, 15, 94.5, 108, false);
-        } else if ($this->labelsMix == 1) {
-          $pdf->useTemplate($tplidx, 110, 15, 94.5, 108, false);
-        } else if ($this->labelsMix == 2) {
-          $pdf->useTemplate($tplidx, 5, 170, 94.5, 108, false);
-        } else if ($this->labelsMix == 3) {
-          $pdf->useTemplate($tplidx, 110, 170, 94.5, 108, false);
-        } else {
-          echo $this->_module->l('Problems with labels count, please, select one order!!!');
-          exit();
+        $print_type = Configuration::get('omnivalt_print_type');
+        if (empty($print_type)) {
+          $print_type = '4';
         }
-        //$pages++;
-        $this->labelsMix++;
-        /*-------------------------------------*/
+        if ($print_type == '1') { // One per page
+          for ($i = 1; $i <= $pagecount; $i++) {
+            $tplidx = $pdf->ImportPage($i);
+            $s = $pdf->getTemplatesize($tplidx);
+            $pdf->AddPage('P', array($s['width'], $s['height']));
+            $pdf->useTemplate($tplidx);
+          }
+        } else if ($print_type == '4') { // Four per page
+          $newPG = array(0, 4, 8, 12, 16, 20, 24, 28, 32);
+          if ($this->labelsMix >= 4) {
+            $pdf->AddPage();
+            $page = 1;
+            $templateId = $pdf->importPage($page);
+            $this->labelsMix = 0;
+          }
+          $tplidx = $pdf->ImportPage(1);
+
+          if ($this->labelsMix == 0) {
+            $pdf->useTemplate($tplidx, 5, 15, 94.5, 108, false);
+          } else if ($this->labelsMix == 1) {
+            $pdf->useTemplate($tplidx, 110, 15, 94.5, 108, false);
+          } else if ($this->labelsMix == 2) {
+            $pdf->useTemplate($tplidx, 5, 170, 94.5, 108, false);
+          } else if ($this->labelsMix == 3) {
+            $pdf->useTemplate($tplidx, 110, 170, 94.5, 108, false);
+          } else {
+            echo $this->_module->l('Problems with labels count, please, select one order!!!');
+            exit();
+          }
+          $this->labelsMix++;
+        }
       }
     $pdf->Output('Omnivalt_labels.pdf', 'I');
   }
