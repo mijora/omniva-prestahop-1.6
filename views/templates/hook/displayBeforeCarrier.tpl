@@ -18,9 +18,11 @@
 * ****************************************************
 *}
 <script>
+    var omnivaTerminals = {$terminals_list|@json_encode nofilter};
+</script>
+<script>
     var omniva_current_country = '{$omniva_current_country}';
-    var omniva_postcode = '{$omniva_postcode}';
-    var omnivaTerminals = {$terminals_list|@json_encode nofilter}
+    var omniva_postcode = '';
     var show_omniva_map = {$omniva_map};
     {literal}
     $(document).ready(function(){
